@@ -7,10 +7,12 @@ public class EnemyController : MonoBehaviour
 {
     public Rigidbody enemybody;
     public CapsuleCollider feet;
+    public CapsuleCollider wallDetector;
     public Transform Destination1;
     public Transform Destination2;
 
-    public float motionIncrement;
+    public float motionSpeed;
+    public float rotationSpeed;
 
     public float delay;
 
@@ -18,19 +20,28 @@ public class EnemyController : MonoBehaviour
 
     private Transform currentPosition;
 
-    private bool canMove;
+    private float currentRotation;
+
+    [SerializeField]private bool canMove;
+    [SerializeField]private bool startingRotation;
+    [SerializeField]private bool endingRotation;
+
     private bool movingRight;
     private bool movingLeft;
 
-    [Serialized] bool grounded;
+    [SerializeField] bool wallDetected;
+    
 
 
     void Start()
     {
         currentPosition = this.GetComponent<Transform>();
         enemybody = this.GetComponent<Rigidbody>();
+        currentPosition.SetPositionAndRotation(Destination1.position, currentPosition.rotation);
         movingLeft = false;
         canMove = true;
+        startingRotation = false;
+        endingRotation = true;
 
     }
 
@@ -43,6 +54,7 @@ public class EnemyController : MonoBehaviour
             movingLeft = true;
 
             enemybody.velocity = Vector3.zero;
+            rotate();
 
             timer = 0;
         }
@@ -59,27 +71,68 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void turnAround()
+    {
+        if(wallDetected)
+        {
+            rotate();
+        }
+    }
+
+    private void rotate()
+    {
+        canMove = false;
+        startingRotation = true;
+        endingRotation = false;
+        enemybody.velocity = Vector3.zero;
+
+        enemybody.angularVelocity = new Vector3(0, rotationSpeed);
+    }
+
+    private void stopRotation()
+    {
+       if(!canMove && startingRotation)
+        {
+
+            startingRotation = false;
+            currentRotation = currentPosition.rotation.eulerAngles.y;
+            endingRotation = true;
+        }
+
+       if(!canMove && endingRotation)
+        {
+            if(true)
+            {
+                enemybody.angularVelocity = Vector3.zero;
+                canMove = true;
+            }
+        }
+
+    }
 
     private void MoveToPosition()
     {
         if (canMove)
         {
-            if (movingRight)
-                enemybody.velocity = new Vector3(motionIncrement, 0, 0);
-            else
-                enemybody.velocity = new Vector3(motionIncrement * -1f, 0, 0);
+            enemybody.angularVelocity = Vector3.zero;
+
+         //   if (movingRight)
+                enemybody.velocity = new Vector3(motionSpeed, 0, 0);
+         //   else
+         //       enemybody.velocity = new Vector3(motionSpeed * -1f, 0, 0);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        if ((timer >= delay) && !canMove)
-        {
-            canMove = true;
-            timer = 0;
-        }
+      
+        Debug.Log(currentRotation);
+        wallDetected = wallDetector.GetComponent<FeetCheck>().grounded;
+
+        stopRotation();
+
+       /*
 
         stopMotion();
 
@@ -91,12 +144,13 @@ public class EnemyController : MonoBehaviour
         {
             movingLeft = true;
         }
-
+        */
     }
 
     void FixedUpdate()
     {
         MoveToPosition();
+        turnAround();
     }
 }
 
