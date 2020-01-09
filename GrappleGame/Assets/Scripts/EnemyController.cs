@@ -21,6 +21,9 @@ public class EnemyController : MonoBehaviour
     private Transform currentPosition;
 
     private float currentRotation;
+    private float firstRotation;
+
+    private float facingDirection;
 
     [SerializeField]private bool canMove;
     [SerializeField]private bool startingRotation;
@@ -38,10 +41,12 @@ public class EnemyController : MonoBehaviour
         currentPosition = this.GetComponent<Transform>();
         enemybody = this.GetComponent<Rigidbody>();
         currentPosition.SetPositionAndRotation(Destination1.position, currentPosition.rotation);
+        firstRotation = currentPosition.rotation.eulerAngles.y;
         movingLeft = false;
         canMove = true;
         startingRotation = false;
         endingRotation = true;
+        //facingDirection = enemybody.
 
     }
 
@@ -97,16 +102,18 @@ public class EnemyController : MonoBehaviour
         {
 
             startingRotation = false;
-            currentRotation = currentPosition.rotation.eulerAngles.y;
+            
             endingRotation = true;
         }
 
        if(!canMove && endingRotation)
         {
-            if(true)
+     
+            if(currentRotation-firstRotation >= 180f)
             {
                 enemybody.angularVelocity = Vector3.zero;
                 canMove = true;
+                firstRotation = currentRotation;
             }
         }
 
@@ -119,7 +126,7 @@ public class EnemyController : MonoBehaviour
             enemybody.angularVelocity = Vector3.zero;
 
          //   if (movingRight)
-                enemybody.velocity = new Vector3(motionSpeed, 0, 0);
+                enemybody.velocity = new Vector3(motionSpeed* enemybody.transform.forward.z, 0, 0);
          //   else
          //       enemybody.velocity = new Vector3(motionSpeed * -1f, 0, 0);
         }
@@ -129,28 +136,31 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
       
-       // Debug.Log(currentRotation);
+        Debug.Log(enemybody.transform.forward);
         wallDetected = wallDetector.GetComponent<FeetCheck>().grounded;
 
-        stopRotation();
 
-       /*
+        currentRotation = currentPosition.rotation.eulerAngles.y;
 
-        stopMotion();
 
-        if(((currentPosition.position.x.Equals(Destination1.position.x))||(currentPosition.position.x < Destination2.position.x)) && !movingLeft)
-        {
-            movingRight = true;
-        }
-        else
-        {
-            movingLeft = true;
-        }
-        */
+        /*
+
+         stopMotion();
+
+         if(((currentPosition.position.x.Equals(Destination1.position.x))||(currentPosition.position.x < Destination2.position.x)) && !movingLeft)
+         {
+             movingRight = true;
+         }
+         else
+         {
+             movingLeft = true;
+         }
+         */
     }
 
     void FixedUpdate()
     {
+        stopRotation();
         MoveToPosition();
         turnAround();
     }
