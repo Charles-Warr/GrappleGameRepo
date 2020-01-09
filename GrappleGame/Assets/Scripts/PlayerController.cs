@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody rb;
-    [SerializeField] FeetCheck feet;
-    public Vector2 curVel;
-    public Vector2 dirInput;
+    [SerializeField] GameObject feet;
 
+    Vector2 dirInput;
+    [SerializeField] Vector2 curVel;
+
+    float gravity = 9.8f;
     [SerializeField] bool grounded;
     [SerializeField] float groundSpeed;
 
@@ -16,26 +18,27 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        feet = GetComponent<FeetCheck>();
+     
     }
 
     // Update is called once per frame
     void Update()
     {
-        rb.velocity = curVel;
-        grounded = feet.grounded;
+        //Input
+        dirInput.x = Input.GetAxis("Horizontal");
+        dirInput.y = Input.GetAxis("Vertical");
 
-        if(grounded == false)
-        {
-            curVel.y -= Time.deltaTime;
-        }
-        else
+        rb.velocity = curVel;
+
+        grounded = feet.GetComponent<FeetCheck>().grounded;
+        if (grounded == true)
         {
             curVel.y = 0;
         }
-
-        dirInput.x = Input.GetAxis("Horizontal");
-        dirInput.y = Input.GetAxis("Vertical");
+        else
+        {
+            curVel.y -= gravity * Time.deltaTime;
+        }
 
     }
 
