@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class JumpingEnemyController : MonoBehaviour
 {
     public Rigidbody enemybody;
     public CapsuleCollider wallDetector;
@@ -22,11 +22,11 @@ public class EnemyController : MonoBehaviour
     private bool startingRotation;
     private bool endingRotation;
 
-    
+
     private bool movingLeft;
 
     private bool wallDetected;
-    
+
 
 
     void Start()
@@ -46,13 +46,13 @@ public class EnemyController : MonoBehaviour
 
     private void turnAround()
     {
-        if(wallDetected)
+        if (wallDetected)
         {
             rotate();
-       
+
         }
     }
-    
+
 
     private void rotate()
     {
@@ -66,18 +66,18 @@ public class EnemyController : MonoBehaviour
 
     private void stopRotation()
     {
-       if(!canMove && startingRotation)
+        if (!canMove && startingRotation)
         {
 
             startingRotation = false;
-            
+
             endingRotation = true;
         }
 
-       if(!canMove && endingRotation)
+        if (!canMove && endingRotation)
         {
-     
-            if(currentRotation-firstRotation >= 180f)
+
+            if (currentRotation - firstRotation >= 180f)
             {
                 enemybody.angularVelocity = Vector3.zero;
                 canMove = true;
@@ -87,20 +87,25 @@ public class EnemyController : MonoBehaviour
 
     }
 
+    private void jump()
+    {
+        
+    }
+
     private void MoveToPosition()
     {
         if (canMove)
         {
             enemybody.angularVelocity = Vector3.zero;
 
-            enemybody.velocity = new Vector3(motionSpeed* enemybody.transform.forward.z, 0, 0);
+            enemybody.velocity = new Vector3(motionSpeed * enemybody.transform.forward.z, 0, 0);
 
         }
     }
 
     void Update()
     {
-      
+
         wallDetected = wallDetector.GetComponent<FeetCheck>().grounded;
 
 
@@ -112,10 +117,7 @@ public class EnemyController : MonoBehaviour
     {
         stopRotation();
         MoveToPosition();
+        jump();
         turnAround();
     }
-}
-
-internal class SerializedAttribute : Attribute
-{
 }
