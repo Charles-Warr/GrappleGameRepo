@@ -76,8 +76,10 @@ public class EnemyController : MonoBehaviour
         if(wallDetected)
         {
             rotate();
+       
         }
     }
+    
 
     private void rotate()
     {
@@ -127,7 +129,7 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
       
-        Debug.Log(currentRotation);
+       // Debug.Log(currentRotation);
         wallDetected = wallDetector.GetComponent<FeetCheck>().grounded;
 
         stopRotation();

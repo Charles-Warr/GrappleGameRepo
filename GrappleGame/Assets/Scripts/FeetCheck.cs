@@ -24,21 +24,16 @@ public class FeetCheck : MonoBehaviour
         {
             grounded = true;
         }
-        else
+ 
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.GetComponent<Ground>())
         {
             grounded = false;
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.GetComponent<Ground>())
-        {
-            grounded = true;
-        }
-        else
-        {
-            grounded = false;
-        }
-    }
+ 
 }
