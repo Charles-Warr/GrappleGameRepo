@@ -22,9 +22,6 @@ public class EnemyController : MonoBehaviour
     private bool startingRotation;
     private bool endingRotation;
 
-    
-    private bool movingLeft;
-
     private bool wallDetected;
     
 
@@ -35,7 +32,6 @@ public class EnemyController : MonoBehaviour
         enemybody = this.GetComponent<Rigidbody>();
         currentPosition.SetPositionAndRotation(StartingPoint.position, currentPosition.rotation);
         firstRotation = currentPosition.rotation.eulerAngles.y;
-        movingLeft = false;
         canMove = true;
         startingRotation = false;
         endingRotation = true;
@@ -77,7 +73,7 @@ public class EnemyController : MonoBehaviour
        if(!canMove && endingRotation)
         {
      
-            if(currentRotation-firstRotation >= 180f)
+            if(currentRotation - firstRotation >= 180f)
             {
                 enemybody.angularVelocity = Vector3.zero;
                 canMove = true;
@@ -103,14 +99,16 @@ public class EnemyController : MonoBehaviour
       
         wallDetected = wallDetector.GetComponent<FeetCheck>().grounded;
 
-
+        stopRotation();
         currentRotation = currentPosition.rotation.eulerAngles.y;
+
+        Debug.Log(currentRotation);
 
     }
 
     void FixedUpdate()
     {
-        stopRotation();
+        
         MoveToPosition();
         turnAround();
     }
