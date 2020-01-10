@@ -11,6 +11,9 @@ public class JumpingEnemyController : MonoBehaviour
 
     public float motionSpeed;
     public float rotationSpeed;
+    public float jumpHeight;
+    public float jumpArch;
+    public float jumpDelay;
 
 
     private Transform currentPosition;
@@ -21,7 +24,6 @@ public class JumpingEnemyController : MonoBehaviour
     private bool canMove;
     private bool startingRotation;
     private bool endingRotation;
-
 
     private bool movingLeft;
 
@@ -89,7 +91,11 @@ public class JumpingEnemyController : MonoBehaviour
 
     private void jump()
     {
-        
+        if(canMove && (Time.time%jumpDelay==0))
+        {
+            enemybody.AddForce(Vector3.up*jumpHeight, ForceMode.Impulse);
+            enemybody.AddForce(Vector3.forward*jumpArch, ForceMode.Impulse);
+        }
     }
 
     private void MoveToPosition()
@@ -98,7 +104,7 @@ public class JumpingEnemyController : MonoBehaviour
         {
             enemybody.angularVelocity = Vector3.zero;
 
-            enemybody.velocity = new Vector3(motionSpeed * enemybody.transform.forward.z, 0, 0);
+            enemybody.velocity = new Vector3(motionSpeed * enemybody.transform.forward.z, enemybody.velocity.y, 0);
 
         }
     }
