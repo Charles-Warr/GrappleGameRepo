@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashSpeed;
     [SerializeField] float startDashTime;
     [SerializeField] float curDashTime;
-    [SerializeField] bool grabbing;
+    [SerializeField] float dashDelay;
+    [SerializeField] bool dashing;
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +34,7 @@ public class PlayerController : MonoBehaviour
         {
             dirInput.x = Input.GetAxis("Horizontal");
             dirInput.y = Input.GetAxis("Vertical");
-            dashInput = Input.GetKeyDown(KeyCode.LeftShift);
+            dashInput = Input.GetButton("Fire3");
         }
         //ground check
         {
@@ -49,7 +50,23 @@ public class PlayerController : MonoBehaviour
         }
         rb.velocity = curVel;
 
-
+        //dash time rules
+        if (curDashTime < startDashTime)
+        {
+            curDashTime += Time.deltaTime;
+        }
+        else if (curDashTime >= startDashTime)
+        {
+            curDashTime = startDashTime;
+        }
+        if (curDashTime <= 0)
+        {
+            curDashTime = 0;
+        }
+        if(dashing == true && curDashTime == startDashTime)
+        {
+            dashing = false;
+        }
 
     }
 
@@ -58,14 +75,16 @@ public class PlayerController : MonoBehaviour
         //movement
         curVel = new Vector3(dirInput.x * groundSpeed, curVel.y);
 
-        if (dashInput && curDashTime == startDashTime)
+        if (dashInput && curDashTime == startDashTime) 
         {
+            curDashTime -= Time.deltaTime;
             Dash();
         }
     }
 
     void Dash()
     {
-        curVel = new Vector2(dashSpeed, 0);
+        dashing = true;
+        curVel = new Vector2(dashSpeed * Time.deltaTime, 0);
     }
 }
