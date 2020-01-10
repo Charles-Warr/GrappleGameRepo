@@ -888,7 +888,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08dc3f9cea0765f4ca067d7796e877a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1176557432}
   camVec: {x: 0, y: 0, z: 0}
   zDist: -25
   offset: {x: 0, y: 0, z: 0}
@@ -1055,12 +1054,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &1176557432 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7791024831828347003, guid: 888c4a5894b0a674d8520c68a1cacc48,
-    type: 3}
-  m_PrefabInstance: {fileID: 7791024830853193475}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1209218396
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1127,6 +1120,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player_Luchadora_Block
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 631e87c7bd7583440a9044de7331dce1,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 631e87c7bd7583440a9044de7331dce1, type: 3}
@@ -1377,7 +1375,8 @@ MonoBehaviour:
   dashSpeed: 0
   startDashTime: 0
   curDashTime: 0
-  grabbing: 0
+  dashDelay: 0
+  dashing: 0
 --- !u!4 &1563056762 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 631e87c7bd7583440a9044de7331dce1,
