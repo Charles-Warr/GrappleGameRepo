@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool aiming;
     [SerializeField] GameObject aimReticle;
 
-    float gravity = 9.8f;
+    float gravity = 15f;
+    [SerializeField] float maxFallSpeed;
     [SerializeField] float groundSpeed;
     [SerializeField] float dashSpeed;
     [SerializeField] float dashTime;
@@ -73,6 +74,7 @@ public class PlayerController : MonoBehaviour
             dirInput.x = Input.GetAxis("Horizontal");
             dirInput.y = Input.GetAxis("Vertical");
             dashInput = Input.GetButtonDown("Fire3");
+            jumpInput = Input.GetButtonDown("Jump");
 
         }
         //ground check
@@ -124,7 +126,12 @@ public class PlayerController : MonoBehaviour
         {
             curVel = new Vector3(dirInput.x * groundSpeed, curVel.y);
 
+            if (-curVel.y > maxFallSpeed)
+            {
+                curVel.y = -maxFallSpeed;
+            }
         }
+
         //Flip player if moving in opposite direction 
         if (dirInput.x * transform.right.x < 0 && !dashing)
         {
@@ -162,6 +169,10 @@ public class PlayerController : MonoBehaviour
                 grabbedObject.transform.parent = null;
                 grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
                 grabbing = false;
+            }
+            if (jumpInput)
+            {
+
             }
         }
 
