@@ -6,25 +6,36 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody rb;
     [SerializeField] GameObject feet;
+    [SerializeField] GameObject grabTrigger;
 
     Vector2 dirInput;
     bool dashInput;
+    bool jumpInput;
     [SerializeField] Vector2 curVel;
 
-    float gravity = 9.8f;
+    //checks
     [SerializeField] bool grounded;
+    [SerializeField] bool canDash;
+    [SerializeField] bool dashing;
+    [SerializeField] bool canGrab;
+    [SerializeField] bool grabbing;
+    [SerializeField] GameObject grabbedObject;
+    [SerializeField] bool aiming;
+    [SerializeField] GameObject aimReticle;
+
+    float gravity = 9.8f;
     [SerializeField] float groundSpeed;
     [SerializeField] float dashSpeed;
-    [SerializeField] float startDashTime;
+    [SerializeField] float dashTime;
     [SerializeField] float curDashTime;
     [SerializeField] float dashDelay;
-    [SerializeField] bool dashing;
+
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        curDashTime = startDashTime;
+        curDashTime = dashTime;
     }
 
     // Update is called once per frame
@@ -34,7 +45,8 @@ public class PlayerController : MonoBehaviour
         {
             dirInput.x = Input.GetAxis("Horizontal");
             dirInput.y = Input.GetAxis("Vertical");
-            dashInput = Input.GetButton("Fire3");
+            dashInput = Input.GetButtonDown("Fire3");
+
         }
         //ground check
         {
@@ -48,43 +60,88 @@ public class PlayerController : MonoBehaviour
                 curVel.y -= gravity * Time.deltaTime;
             }
         }
+
         rb.velocity = curVel;
 
         //dash time rules
-        if (curDashTime < startDashTime)
+        if (dashInput && canDash)
         {
-            curDashTime += Time.deltaTime;
+            dashing = true;
         }
-        else if (curDashTime >= startDashTime)
+        if (!dashing && !grabbing)
         {
-            curDashTime = startDashTime;
+            if (curDashTime < dashTime)
+            {
+                curDashTime += Time.deltaTime;
+                canDash = false;
+            }
+            else if (curDashTime >= dashTime)
+            {
+                curDashTime = dashTime;
+                canDash = true;
+            }
         }
         if (curDashTime <= 0)
         {
             curDashTime = 0;
-        }
-        if(dashing == true && curDashTime == startDashTime)
-        {
             dashing = false;
         }
 
+        grabbedObject = grabTrigger.GetComponent<GrabCheck>().objectGrabbed;
     }
 
     void FixedUpdate()
     {
         //movement
-        curVel = new Vector3(dirInput.x * groundSpeed, curVel.y);
-
-        if (dashInput && curDashTime == startDashTime) 
+        if (!dashing && !grabbing)
         {
-            curDashTime -= Time.deltaTime;
-            Dash();
+            curVel = new Vector3(dirInput.x * groundSpeed, curVel.y);
+
         }
+        //Flip player if moving in opposite direction 
+        if (dirInput.x * transform.right.x < 0 && !dashing)
+        {
+            FlipPlayer(dirInput.x > 0);
+        }
+
+        //Dash Function
+        if (dashing)
+        {
+            canDash = false;
+            canGrab = true;
+            curDashTime -= Time.deltaTime;
+            curVel = transform.right * dashSpeed;
+            if (grabTrigger.GetComponent<GrabCheck>().grabbable)
+            {
+                grabbing = true;
+                dashing = false;
+            }
+        }
+        else
+        {
+            canGrab = false;
+        }
+
+
+        if (grabbing)
+        {
+            canDash = false;
+            grabbedObject.transform.parent = grabTrigger.transform;
+            grabbedObject.transform.position = grabTrigger.transform.position;
+            grabbedObject.GetComponent<Rigidbody>().isKinematic = true;
+            curVel.x = 0;
+            if (dashInput)
+            {
+                grabbedObject.transform.parent = null;
+                grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
+                grabbing = false;
+            }
+        }
+
     }
 
-    void Dash()
+    void FlipPlayer(bool r)   //Makes player face correct direction
     {
-        dashing = true;
-        curVel = new Vector2(dashSpeed * Time.deltaTime, 0);
+        transform.rotation = Quaternion.LookRotation(r ? Vector3.forward : -Vector3.forward, Vector3.up);
     }
 }
