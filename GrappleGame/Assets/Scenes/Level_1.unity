@@ -1661,8 +1661,8 @@ GameObject:
   - component: {fileID: 2122806684}
   - component: {fileID: 2122806683}
   - component: {fileID: 2122806682}
-  - component: {fileID: 2122806687}
   - component: {fileID: 2122806688}
+  - component: {fileID: 2122806687}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Wall
@@ -1968,7 +1968,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2122806681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 443a47efeeeb13c46ae1493ef8c1acf2, type: 3}
+  m_Script: {fileID: 11500000, guid: baeb7397a5e90074589a0d175a4488f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!65 &2122806688

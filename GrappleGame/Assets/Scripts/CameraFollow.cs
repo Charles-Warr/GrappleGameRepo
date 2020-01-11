@@ -28,6 +28,7 @@ public class CameraFollow : MonoBehaviour
         yield return new WaitForSeconds(delay); 
 
         this.transform.position = new Vector3(location.x + offset.x, location.y + offset.y, zDist);
+
     }
 
     void LateUpdate()
