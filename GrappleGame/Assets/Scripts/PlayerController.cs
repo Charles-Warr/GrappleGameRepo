@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject feet;
     [SerializeField] GameObject grabTrigger;
 
+    public bool cameraTrigger;
+
     Vector2 dirInput;
     bool dashInput;
     bool jumpInput;
@@ -36,6 +38,31 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         curDashTime = dashTime;
+        cameraTrigger = true;
+    }
+    /*
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Wall")
+        {
+            cameraTrigger = false;
+        }
+    }
+    */
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.tag == "Wall")
+        {
+            cameraTrigger = false;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "Wall")
+        {
+            cameraTrigger = true;
+        }
     }
 
     // Update is called once per frame

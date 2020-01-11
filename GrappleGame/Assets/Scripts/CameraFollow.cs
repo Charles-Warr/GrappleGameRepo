@@ -9,6 +9,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] Vector3 camVec;
     [SerializeField] float zDist;
     [SerializeField] Vector3 offset;
+    [SerializeField] float delay;
 
     // Start is called before the first frame update
     void Start()
@@ -22,14 +23,25 @@ public class CameraFollow : MonoBehaviour
         
     }
 
+    private IEnumerator followPlayer(Vector3 location)
+    {
+        yield return new WaitForSeconds(delay); 
+
+        this.transform.position = new Vector3(location.x + offset.x, location.y + offset.y, zDist);
+    }
+
     void LateUpdate()
     {
-       /*
-        transform.position = camVec;
-        camVec.x = player.transform.position.x + offset.x;
-        camVec.y = player.transform.position.y + offset.y;
-        camVec.z = zDist;
-        */
-        this.transform.position = new Vector3(player.transform.position.x + offset.x, player.transform.position.y + offset.y, zDist );
+        /*
+         transform.position = camVec;
+         camVec.x = player.transform.position.x + offset.x;
+         camVec.y = player.transform.position.y + offset.y;
+         camVec.z = zDist;
+         */
+        
+        if(player.GetComponent<PlayerController>().cameraTrigger)
+            StartCoroutine(followPlayer(player.transform.position));
+
+        //this.transform.position = new Vector3(player.transform.position.x + offset.x, player.transform.position.y + offset.y, zDist );
     }
 }
