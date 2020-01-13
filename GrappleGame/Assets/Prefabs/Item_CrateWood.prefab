@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4506278078982157283}
   - component: {fileID: 4965952885251715613}
   - component: {fileID: 7449814217244442599}
+  - component: {fileID: 7293872844253213729}
   m_Layer: 0
   m_Name: Item_CrateWood
   m_TagString: Untagged
@@ -108,8 +109,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 72
-  m_CollisionDetection: 1
+  m_Constraints: 120
+  m_CollisionDetection: 3
 --- !u!114 &7449814217244442599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,5 +121,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b98ff6ef31e5954caedc8422e739327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7293872844253213729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2186841706462384699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 443a47efeeeb13c46ae1493ef8c1acf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

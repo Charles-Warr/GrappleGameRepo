@@ -4,42 +4,59 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    //components
     Rigidbody rb;
     [SerializeField] GameObject feet;
     [SerializeField] GameObject grabTrigger;
+    [SerializeField] PauseMenu pauseCheck;
 
     public bool cameraTrigger;
-
     Vector2 dirInput;
     bool dashInput;
     bool jumpInput;
+    [SerializeField] float influence;
     [SerializeField] Vector2 curVel;
+    [SerializeField] Vector2[] powMoveVel;
 
     //checks
     [SerializeField] bool grounded;
-    [SerializeField] bool canDash;
+    [SerializeField] bool groundable;
+    bool canDash;
     [SerializeField] bool dashing;
-    [SerializeField] bool canGrab;
+    bool canGrab;
     [SerializeField] bool grabbing;
+    [SerializeField] bool powMove;
+    bool frontAttack;
+    bool backAttack;
+    bool upAttack;
+    bool downAttack;
     [SerializeField] GameObject grabbedObject;
     [SerializeField] bool aiming;
     [SerializeField] GameObject aimReticle;
 
-    float gravity = 15f;
-    [SerializeField] float maxFallSpeed;
+    //stats
+    [SerializeField] float gravityMult;
+    [SerializeField] float powFallSpeed;
+    [SerializeField] float regFallSpeed;
+    [SerializeField] float curFallSpeed;
+    [SerializeField] float directionalInf;
     [SerializeField] float groundSpeed;
     [SerializeField] float dashSpeed;
     [SerializeField] float dashTime;
     [SerializeField] float curDashTime;
     [SerializeField] float dashDelay;
+    [SerializeField] float ungroundedTime;
+    [SerializeField] float curUngroundedTime;
 
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        curDashTime = dashTime;
+        curDashTime = dashTime;;
         cameraTrigger = true;
+        groundable = true;
+        pauseCheck = FindObjectOfType<PauseMenu>();
     }
     /*
     private void OnTriggerEnter(Collider other)
@@ -69,6 +86,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        influence = (dirInput.normalized.x * transform.right.x) + 1 + directionalInf * Time.deltaTime;
         //Input
         {
             dirInput.x = Input.GetAxis("Horizontal");
@@ -79,100 +97,233 @@ public class PlayerController : MonoBehaviour
         }
         //ground check
         {
-            grounded = feet.GetComponent<FeetCheck>().grounded;
-            if (grounded == true)
+            if(feet.GetComponent<FeetCheck>().grounded && groundable)
             {
-                curVel.y = 0;
+                grounded = true;
             }
             else
             {
-                curVel.y -= gravity * Time.deltaTime;
+                grounded = false;
             }
-        }
+            if (grounded) 
+            {
+                curVel.y = 0;
+            }
+            if(!grounded || powMove)
+            {
+                curVel.y -= -Physics.gravity.y * gravityMult * Time.deltaTime;
+            }
 
-        rb.velocity = curVel;
+            //check for not grounded timer
+            if (curUngroundedTime <= 0)
+            {
+                curUngroundedTime = 0;
+            }
+            if (curUngroundedTime >= ungroundedTime)
+            {
+                curUngroundedTime = ungroundedTime;
+            }
+            if (curUngroundedTime > 0 && frontAttack)
+            {
+                groundable = false;
+            }
+            else if (curUngroundedTime <= 0)
+            {
+                groundable = true;
+            }
+
+        }
 
         //dash time rules
-        if (dashInput && canDash)
         {
-            dashing = true;
-        }
-        if (!dashing && !grabbing)
-        {
-            if (curDashTime < dashTime)
+            if (canDash && dashInput)
             {
-                curDashTime += Time.deltaTime;
-                canDash = false;
+                dashing = true;
             }
-            else if (curDashTime >= dashTime)
+            if (!dashing && !grabbing)
             {
-                curDashTime = dashTime;
-                canDash = true;
+                if (curDashTime < dashTime)
+                {
+                    curDashTime += Time.deltaTime;
+                    canDash = false;
+                }
+                else if (curDashTime >= dashTime)
+                {
+                    curDashTime = dashTime;
+                    canDash = true;
+                }
             }
-        }
-        if (curDashTime <= 0)
-        {
-            curDashTime = 0;
-            dashing = false;
+            if (curDashTime <= 0)
+            {
+                curDashTime = 0;
+                dashing = false;
+            }
         }
 
         grabbedObject = grabTrigger.GetComponent<GrabCheck>().objectGrabbed;
+
+        if (grabbing)
+        {
+            if (dashInput)
+            {
+                grabbing = false;
+            }
+            else if (jumpInput && transform.right.x * dirInput.x > 0)
+            {
+                ungroundedTime = .5f;
+                curUngroundedTime = ungroundedTime;
+                frontAttack = true;
+            }
+            else if(jumpInput && transform.right.x * dirInput.x < 0)
+            {
+                ungroundedTime = .5f;
+                curUngroundedTime = ungroundedTime;
+                backAttack = true;
+            }
+            else if(jumpInput && transform.right.x * dirInput.y > 0)
+            {
+                ungroundedTime = .5f;
+                curUngroundedTime = ungroundedTime;
+                upAttack = true;
+            }
+            else if(jumpInput && transform.right.x * dirInput.y < 0)
+            {
+                ungroundedTime = .7f;
+                curUngroundedTime = ungroundedTime;
+                downAttack = true;
+            }
+        }
+        if (frontAttack)
+        {
+            powMove = true;
+            canDash = false;
+            curUngroundedTime -= Time.deltaTime;
+            if (grounded && curUngroundedTime <= 0)
+            {
+                frontAttack = false;
+                grabbing = false;
+            }
+        }
+        else if (backAttack)
+        {
+            powMove = true;
+            canDash = false;
+            curUngroundedTime -= Time.deltaTime;
+            if (grounded && curUngroundedTime <= 0)
+            {
+                backAttack = false;
+                grabbing = false;
+            }
+        }
+        else if (upAttack)
+        {
+            powMove = true;
+            canDash = true;
+            curUngroundedTime -= Time.deltaTime;
+            if (grounded && curUngroundedTime <= 0)
+            {
+                upAttack = false;
+                grabbing = false;
+            }
+        }
+        else if (downAttack)
+        {
+            powMove = true;
+            canDash = false;
+            curUngroundedTime -= Time.deltaTime;
+            if (grounded && curUngroundedTime <= 0)
+            {
+                downAttack = false;
+                grabbing = false;
+            }
+        }
+        else if(!frontAttack && !upAttack)
+        {
+            powMove = false;
+        }
     }
 
     void FixedUpdate()
     {
+        rb.velocity = curVel;
+
         //movement
-        if (!dashing && !grabbing)
+        if (!dashing && !grabbing && !powMove)
         {
             curVel = new Vector3(dirInput.x * groundSpeed, curVel.y);
 
-            if (-curVel.y > maxFallSpeed)
+            if (curVel.normalized.y > regFallSpeed)
             {
-                curVel.y = -maxFallSpeed;
+                curVel.y = -regFallSpeed;
             }
+        }
+        else if (powMove)
+        {
+            if (curVel.normalized.y > powFallSpeed)
+            {
+                curVel.y = -powFallSpeed;
+            }
+            
         }
 
         //Flip player if moving in opposite direction 
-        if (dirInput.x * transform.right.x < 0 && !dashing)
+        if (dirInput.x * transform.right.x < 0 && !dashing && !powMove)
         {
             FlipPlayer(dirInput.x > 0);
         }
 
         //Dash Function
-        if (dashing)
         {
-            canDash = false;
-            canGrab = true;
-            curDashTime -= Time.deltaTime;
-            curVel = transform.right * dashSpeed;
-            if (grabTrigger.GetComponent<GrabCheck>().grabbable)
+            if (dashing)
             {
-                grabbing = true;
-                dashing = false;
+                canDash = false;
+                canGrab = true;
+                curDashTime -= Time.deltaTime;
+                curVel = transform.right * dashSpeed;
+                if (grabTrigger.GetComponent<GrabCheck>().grabbable)
+                {
+                    grabbing = true;
+                    dashing = false;
+                }
+            }
+            else
+            {
+                canGrab = false;
+
             }
         }
-        else
-        {
-            canGrab = false;
-        }
 
-
-        if (grabbing)
+        //Grab Function
         {
-            canDash = false;
-            grabbedObject.transform.parent = grabTrigger.transform;
-            grabbedObject.transform.position = grabTrigger.transform.position;
-            grabbedObject.GetComponent<Rigidbody>().isKinematic = true;
-            curVel.x = 0;
-            if (dashInput)
+            if (grabbing)
+            {
+                canDash = false;
+                grabbedObject.transform.parent = grabTrigger.transform;
+                grabbedObject.transform.position = grabTrigger.transform.position;
+                grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+                curVel.x = 0;
+
+            }
+            if (frontAttack)
+            {
+                rb.AddForce(transform.up * powMoveVel[0], ForceMode.Impulse);
+                rb.AddForce(transform.right * powMoveVel[0] * (influence), ForceMode.Impulse);
+                grabbedObject.transform.parent = grabTrigger.transform;
+                grabbedObject.transform.position = grabTrigger.transform.position;
+                grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+            }
+            else if (upAttack)
+            {
+                rb.AddForce(transform.up * powMoveVel[2], ForceMode.Impulse);
+                rb.AddForce(transform.right * powMoveVel[2] * (influence), ForceMode.Impulse);
+                grabbedObject.transform.parent = grabTrigger.transform;
+                grabbedObject.transform.position = grabTrigger.transform.position;
+                grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+            }
+            else
             {
                 grabbedObject.transform.parent = null;
-                grabbedObject.GetComponent<Rigidbody>().isKinematic = false;
-                grabbing = false;
-            }
-            if (jumpInput)
-            {
-
+                grabbedObject.GetComponent<Rigidbody>().velocity = grabbedObject.GetComponent<Rigidbody>().velocity;
             }
         }
 
@@ -182,4 +333,5 @@ public class PlayerController : MonoBehaviour
     {
         transform.rotation = Quaternion.LookRotation(r ? Vector3.forward : -Vector3.forward, Vector3.up);
     }
+
 }
