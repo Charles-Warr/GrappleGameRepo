@@ -8,15 +8,15 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     [SerializeField] GameObject feet;
     [SerializeField] GameObject grabTrigger;
-    [SerializeField] PauseMenu pauseCheck;
 
     public bool cameraTrigger;
     Vector2 dirInput;
     bool dashInput;
     bool jumpInput;
-    [SerializeField] float influence;
+    [SerializeField] float dirInf;
     [SerializeField] Vector2 curVel;
     [SerializeField] Vector2[] powMoveVel;
+    [SerializeField] float DIMult;
 
     //checks
     [SerializeField] bool grounded;
@@ -38,8 +38,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float gravityMult;
     [SerializeField] float powFallSpeed;
     [SerializeField] float regFallSpeed;
-    [SerializeField] float curFallSpeed;
-    [SerializeField] float directionalInf;
+    float curFallSpeed;
     [SerializeField] float groundSpeed;
     [SerializeField] float dashSpeed;
     [SerializeField] float dashTime;
@@ -56,7 +55,6 @@ public class PlayerController : MonoBehaviour
         curDashTime = dashTime;;
         cameraTrigger = true;
         groundable = true;
-        pauseCheck = FindObjectOfType<PauseMenu>();
     }
 
     /*
@@ -87,7 +85,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        influence = (transform.right.x * dirInput.normalized.x) * directionalInf;
+        dirInf = (dirInput.normalized.x * transform.right.x + 1) * DIMult;
         //Input
         {
             dirInput.x = Input.GetAxis("Horizontal");
@@ -98,7 +96,7 @@ public class PlayerController : MonoBehaviour
         }
         //ground check
         {
-            if(feet.GetComponent<FeetCheck>().grounded && groundable)
+            if(feet.GetComponent<FeetCheck>().grounded && groundable && !powMove)
             {
                 grounded = true;
             }
@@ -124,7 +122,7 @@ public class PlayerController : MonoBehaviour
             {
                 curUngroundedTime = ungroundedTime;
             }
-            if (curUngroundedTime > 0 && frontAttack)
+            if (curUngroundedTime > 0 && powMove)
             {
                 groundable = false;
             }
@@ -169,31 +167,40 @@ public class PlayerController : MonoBehaviour
             {
                 grabbing = false;
             }
-            else if (jumpInput && transform.right.x * dirInput.x > 0)
+            else if (jumpInput && transform.right.x * dirInput.x > 0 && !powMove)
             {
+                curVel.x = 0;
+                curVel.y = 0;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
                 frontAttack = true;
             }
-            else if(jumpInput && transform.right.x * dirInput.x < 0)
+            else if(jumpInput && transform.right.x * dirInput.x < 0 && !powMove)
             {
+                curVel.x = 0;
+                curVel.y = 0;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
                 backAttack = true;
             }
-            else if(jumpInput && transform.right.x * dirInput.y > 0)
+            else if(jumpInput && transform.right.x * dirInput.y > 0 && !powMove)
             {
+                curVel.x = 0;
+                curVel.y = 0;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
                 upAttack = true;
             }
-            else if(jumpInput && transform.right.x * dirInput.y < 0)
+            else if(jumpInput && transform.right.x * dirInput.y < 0 && !powMove)
             {
+                curVel.x = 0;
+                curVel.y = 0;
                 ungroundedTime = .7f;
                 curUngroundedTime = ungroundedTime;
                 downAttack = true;
             }
         }
+
         if (frontAttack)
         {
             powMove = true;
@@ -219,7 +226,7 @@ public class PlayerController : MonoBehaviour
         else if (upAttack)
         {
             powMove = true;
-            canDash = true;
+            canDash = false;
             curUngroundedTime -= Time.deltaTime;
             if (grounded && curUngroundedTime <= 0)
             {
@@ -252,17 +259,18 @@ public class PlayerController : MonoBehaviour
         if (!dashing && !grabbing && !powMove)
         {
             curVel = new Vector3(dirInput.x * groundSpeed, curVel.y);
-
-            if (curVel.normalized.y > regFallSpeed)
+            curFallSpeed = regFallSpeed;
+            if (curVel.y < -curFallSpeed)
             {
-                curVel.y = -regFallSpeed;
+                curVel.y = -curFallSpeed;
             }
         }
-        else if (powMove)
+        if (powMove)
         {
-            if (curVel.normalized.y > powFallSpeed)
+            curFallSpeed = powFallSpeed;
+            if (curVel.y < -curFallSpeed)
             {
-                curVel.y = -powFallSpeed;
+                curVel.y = -curFallSpeed;
             }
             
         }
@@ -308,7 +316,15 @@ public class PlayerController : MonoBehaviour
             if (frontAttack)
             {
                 rb.AddForce(transform.up * powMoveVel[0], ForceMode.Impulse);
-                rb.AddForce(transform.right * powMoveVel[0] * (influence), ForceMode.Impulse);
+                rb.AddForce(transform.right * powMoveVel[0] * dirInf, ForceMode.Impulse);
+                grabbedObject.transform.parent = grabTrigger.transform;
+                grabbedObject.transform.position = grabTrigger.transform.position;
+                grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+            }
+            else if (backAttack)
+            {
+                rb.AddForce(transform.up * powMoveVel[1], ForceMode.Impulse);
+                rb.AddForce(transform.right * powMoveVel[1] * dirInf, ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
@@ -316,7 +332,15 @@ public class PlayerController : MonoBehaviour
             else if (upAttack)
             {
                 rb.AddForce(transform.up * powMoveVel[2], ForceMode.Impulse);
-                rb.AddForce(transform.right * powMoveVel[2] * dirInput.x, ForceMode.Impulse);
+                rb.AddForce(transform.right * powMoveVel[2] * dirInf, ForceMode.Impulse);
+                grabbedObject.transform.parent = grabTrigger.transform;
+                grabbedObject.transform.position = grabTrigger.transform.position;
+                grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+            }
+            else if (downAttack)
+            {
+                rb.AddForce(transform.up * powMoveVel[3], ForceMode.Impulse);
+                rb.AddForce(transform.right * powMoveVel[3] * dirInput, ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
