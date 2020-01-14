@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
         groundable = true;
         pauseCheck = FindObjectOfType<PauseMenu>();
     }
+
     /*
     private void OnTriggerEnter(Collider other)
     {
@@ -86,7 +87,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        influence = (dirInput.normalized.x * transform.right.x) + 1 + directionalInf * Time.deltaTime;
+        influence = (transform.right.x * dirInput.normalized.x) * directionalInf;
         //Input
         {
             dirInput.x = Input.GetAxis("Horizontal");
@@ -237,7 +238,7 @@ public class PlayerController : MonoBehaviour
                 grabbing = false;
             }
         }
-        else if(!frontAttack && !upAttack)
+        else if(!frontAttack && !backAttack && !upAttack && !downAttack)
         {
             powMove = false;
         }
@@ -315,7 +316,7 @@ public class PlayerController : MonoBehaviour
             else if (upAttack)
             {
                 rb.AddForce(transform.up * powMoveVel[2], ForceMode.Impulse);
-                rb.AddForce(transform.right * powMoveVel[2] * (influence), ForceMode.Impulse);
+                rb.AddForce(transform.right * powMoveVel[2] * dirInput.x, ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
