@@ -280,27 +280,30 @@ MonoBehaviour:
   feet: {fileID: 7791024831927662676}
   grabTrigger: {fileID: 2011576550}
   cameraTrigger: 0
-  influence: 0
+  dirInf: 0
   curVel: {x: 0, y: 0}
-  powMoveVel: {x: 5, y: 20}
+  powMoveVel:
+  - {x: 15, y: 30}
+  - {x: -5, y: 3}
+  - {x: 1, y: 40}
+  - {x: 2, y: 1}
+  DIMult: 2
   grounded: 0
   groundable: 0
-  canDash: 0
   dashing: 0
-  canGrab: 0
   grabbing: 0
-  frontAttack: 0
+  powMove: 0
   grabbedObject: {fileID: 0}
   aiming: 0
   aimReticle: {fileID: 522962000}
-  gravityMult: 2
-  maxFallSpeed: 20
-  directionalInf: 3
-  groundSpeed: 10
-  dashSpeed: 45
-  dashTime: 0.2
+  gravityMult: 3
+  powFallSpeed: 50
+  regFallSpeed: 30
+  groundSpeed: 15
+  dashSpeed: 50
+  dashSpeedMult: 2
+  dashTime: 0.5
   curDashTime: 0
-  dashDelay: 0.5
   ungroundedTime: 0
   curUngroundedTime: 0
 --- !u!1 &7791024831927662676
