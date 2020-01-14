@@ -90,6 +90,8 @@ public class JumpingEnemyController : MonoBehaviour
     {
         jumping = true;
 
+
+        yield return new WaitForSeconds(0);
         if (landed)
         {
             enemybody.velocity = new Vector3(0, enemybody.velocity.y, 0);
