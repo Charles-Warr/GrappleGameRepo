@@ -5,13 +5,12 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public Rigidbody enemybody;
-    public CapsuleCollider wallDetector;
-    public Transform StartingPoint;
+    private Rigidbody enemybody;
+    [SerializeField] CapsuleCollider wallDetector;
+    [SerializeField] Transform StartingPoint;
 
-    public float motionSpeed;
-    public float rotationSpeed;
-
+    [SerializeField] float motionSpeed;
+    [SerializeField] float rotationSpeed;
 
     private Transform currentPosition;
 
@@ -19,9 +18,9 @@ public class EnemyController : MonoBehaviour
     private float firstRotation;
 
     private bool canMove;
-    private bool startingRotation;
-    private bool endingRotation;
-
+    private bool rotating;
+    private bool rotated;
+    
     private bool wallDetected;
     
 
@@ -33,17 +32,20 @@ public class EnemyController : MonoBehaviour
         currentPosition.SetPositionAndRotation(StartingPoint.position, currentPosition.rotation);
         firstRotation = currentPosition.rotation.eulerAngles.y;
         canMove = true;
-        startingRotation = false;
-        endingRotation = true;
 
     }
 
 
 
-    private void turnAround()
+    private void turnAround(bool flag, bool status)
     {
-        if(wallDetected)
+        if(flag || status)
         {
+            if(!rotating)
+            {
+                firstRotation = currentRotation;
+            }
+
             rotate();
        
         }
@@ -52,65 +54,59 @@ public class EnemyController : MonoBehaviour
 
     private void rotate()
     {
-        canMove = false;
-        startingRotation = true;
-        endingRotation = false;
-        enemybody.velocity = Vector3.zero;
 
-        enemybody.angularVelocity = new Vector3(0, rotationSpeed);
-    }
+        rotating = true;
 
-    private void stopRotation()
-    {
-       if(!canMove && startingRotation)
-        {
-
-            startingRotation = false;
-            
-            endingRotation = true;
-        }
-
-       if(!canMove && endingRotation)
-        {
-     
-            if(currentRotation - firstRotation >= 180f)
-            {
-                enemybody.angularVelocity = Vector3.zero;
-                canMove = true;
-                firstRotation = currentRotation;
-            }
-        }
+        enemybody.transform.Rotate(0, Time.deltaTime * rotationSpeed, 0, Space.Self);
 
     }
 
-    private void MoveToPosition()
+
+    private void MoveToPosition(bool flag, bool status)
     {
-        if (canMove)
+        if(flag && !rotating)
         {
-            enemybody.angularVelocity = Vector3.zero;
-
-            enemybody.velocity = new Vector3(motionSpeed* enemybody.transform.forward.z, 0, 0);
-
+            enemybody.velocity = new Vector3(motionSpeed* enemybody.transform.forward.z, enemybody.velocity.y, 0);
+        }
+        else
+        {
+            enemybody.velocity = new Vector3(0,enemybody.velocity.y,0);
         }
     }
 
     void Update()
     {
       
-        wallDetected = wallDetector.GetComponent<FeetCheck>().grounded;
+        wallDetected = wallDetector.GetComponent<WallCheck>().grounded;
+        canMove = !wallDetected;
 
-        stopRotation();
         currentRotation = currentPosition.rotation.eulerAngles.y;
 
-        Debug.Log(currentRotation);
+        rotated = Mathf.Abs(currentRotation - firstRotation) >= 180f;
 
     }
 
     void FixedUpdate()
     {
+        turnAround(wallDetected, rotating);
+        MoveToPosition(canMove, rotating);
+
+        if(rotated)
+        {
+           rotating = false;
+
+            if(currentRotation >= 180f || currentRotation <= 270f)
+            {
+                enemybody.rotation.eulerAngles.Set(enemybody.rotation.eulerAngles.x,180f,enemybody.rotation.eulerAngles.z);
+            }
+            else
+            {
+                enemybody.rotation.eulerAngles.Set(enemybody.rotation.eulerAngles.x, 0, enemybody.rotation.eulerAngles.z);
+            }
+
+            rotated = false;
+        }
         
-        MoveToPosition();
-        turnAround();
     }
 }
 
