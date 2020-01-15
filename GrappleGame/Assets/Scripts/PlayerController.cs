@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool dashing;
     [SerializeField] bool canGrab;
     [SerializeField] bool lifting;
+    [SerializeField] bool canPow;
     [SerializeField] bool powMove;
     bool frontAttack;
     bool backAttack;
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dirInf = (dirInput.x * transform.right.x) + 1 * DIMult;
+        dirInf = (dirInput.normalized.x * transform.right.x) + 1 * DIMult;
         //Input
         {
             dirInput.x = Input.GetAxis("Horizontal");
@@ -331,11 +332,12 @@ public class PlayerController : MonoBehaviour
 
             else if (frontAttack)
             {
-                rb.AddForce(transform.right * powMoveVel[0] * dirInf, ForceMode.Impulse);
-                rb.AddForce(transform.up * powMoveVel[0], ForceMode.Impulse);
+                rb.AddForce(transform.up * powMoveVel[0] + curVel, ForceMode.Impulse);
+                rb.AddForce(transform.right * (powMoveVel[0] + curVel) * dirInf, ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+
             }
             else if (backAttack)
             {
