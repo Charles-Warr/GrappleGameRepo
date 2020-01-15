@@ -22,9 +22,12 @@ public class JumpingEnemyController : MonoBehaviour
 
     [SerializeField] float delayBeforeJump;
     [SerializeField] float delayAfterJump;
+    [SerializeField] float timeBetweenJumps;
 
     private float timer;
     private float firstTime;
+    private float startAirTime;
+    private float airTime;
 
     private bool canMove;
     private bool rotating;
@@ -36,6 +39,7 @@ public class JumpingEnemyController : MonoBehaviour
     private bool landed;
     private bool jumped;
     private bool timeToJump;
+
     private bool timeToMove;
 
     private bool wallDetected;
@@ -53,6 +57,7 @@ public class JumpingEnemyController : MonoBehaviour
         firstTime = Time.time;
         jumpInitiated = false;
         landed = true;
+        startAirTime = 0;
 
 
     }
@@ -82,7 +87,8 @@ public class JumpingEnemyController : MonoBehaviour
                 jumpInitiated = true;
             }
 
-            jump();
+            StartCoroutine(jump());
+            //jump();
         }
     }
 
@@ -91,18 +97,36 @@ public class JumpingEnemyController : MonoBehaviour
         jumping = true;
 
 
-        yield return new WaitForSeconds(0);
+        yield return new WaitForSeconds(delayBeforeJump);
         if (landed)
         {
             enemybody.velocity = new Vector3(0, enemybody.velocity.y, 0);
 
             enemybody.AddForce(new Vector3(jumpForwardForce, jumpHeight, 0), ForceMode.Impulse);
 
-            firstTime = Time.time - 1f;
+            startAirTime = Time.time;
 
             landed = false;
         }
 
+    }
+
+    /*
+    private IEnumerator land()
+    {
+
+    }
+    */
+    private void checkAirStatus()
+    {
+        if(airTime >= 0.1f)
+        {
+
+        }
+        else
+        {
+            
+        }
     }
 
 
@@ -142,11 +166,22 @@ public class JumpingEnemyController : MonoBehaviour
 
         timer = Time.time - firstTime;
 
-        timeToJump = timer >= delayBeforeJump;
+        if(startAirTime != 0)
+        {
+            airTime = Time.time - startAirTime;
+        }
+        else
+        {
+            airTime = 0;
+        }
+
+        Debug.Log(airTime);
+
+        timeToJump = timer >= timeBetweenJumps;
 
         //timeToMove = 
 
-        Debug.Log(timer);
+        //Debug.Log(timer);
 
         currentRotation = currentPosition.rotation.eulerAngles.y;
 
@@ -164,6 +199,7 @@ public class JumpingEnemyController : MonoBehaviour
         }
         else
         {
+            //return checkAirStatus();
             return false;
         }
     }

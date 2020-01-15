@@ -713,6 +713,7 @@ MonoBehaviour:
   jumpForwardForce: 3
   delayBeforeJump: 3
   delayAfterJump: 0
+  timeBetweenJumps: 5
 --- !u!54 &884324636
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1390,11 +1391,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feet: {fileID: 602931919}
   grabTrigger: {fileID: 0}
-  pauseCheck: {fileID: 0}
   cameraTrigger: 0
-  influence: 0
+  dirInf: 0
   curVel: {x: 0, y: 0}
   powMoveVel: []
+  DIMult: 0
   grounded: 0
   groundable: 0
   dashing: 0
@@ -1406,8 +1407,6 @@ MonoBehaviour:
   gravityMult: 0
   powFallSpeed: 0
   regFallSpeed: 0
-  curFallSpeed: 0
-  directionalInf: 0
   groundSpeed: 10
   dashSpeed: 0
   dashTime: 0
