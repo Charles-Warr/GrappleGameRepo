@@ -28,9 +28,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool groundable;
     [SerializeField] bool canDash;
     [SerializeField] bool dashing;
-    [SerializeField] bool canGrab;
     [SerializeField] bool lifting;
-    [SerializeField] bool bounce;
     [SerializeField] bool canPow;
     [SerializeField] bool powMove;
     [SerializeField] bool landed;
@@ -187,11 +185,6 @@ public class PlayerController : MonoBehaviour
                 downAttack = true;
             }
         }
-
-        if(powMove && dashInput)
-            bounce = true;
-        if (powMove && grounded)
-            landed = true;
         if (powMove)
         {
             lifting = false;
@@ -229,7 +222,6 @@ public class PlayerController : MonoBehaviour
             if (dashing)
             {
                 canDash = false;
-                canGrab = true;
                 curDashTime -= Time.deltaTime;
                 curVel = transform.right * dashSpeed * curDashTime * dashSpeedMult;
 
@@ -241,27 +233,24 @@ public class PlayerController : MonoBehaviour
             }
             if(!dashing && !lifting && !powMove)
             {
-                canGrab = false;
                 grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
             }
 
         }
-        
-
-        //Grab Function
+        //Lift Function
+        if (lifting)
         {
-            if (lifting)
-            {
-                canDash = false;
-                grabbedObject = grabTrigger.GetComponent<GrabCheck>().objectInRange;
+            canDash = false;
+            grabbedObject = grabTrigger.GetComponent<GrabCheck>().objectInRange;
 
-                grabbedObject.transform.parent = grabTrigger.transform;
-                grabbedObject.transform.position = grabTrigger.transform.position;
-                grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
-                curFallSpeed = liftingFallSpeed;
-                curVel.x = 0;            
-            }
-
+            grabbedObject.transform.parent = grabTrigger.transform;
+            grabbedObject.transform.position = grabTrigger.transform.position;
+            grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+            curFallSpeed = liftingFallSpeed;
+            curVel.x = 0;
+        }
+        //Pow Move Function
+        {
             if (frontAttack)
             {
                 curUngroundedTime -= Time.deltaTime;
@@ -269,10 +258,9 @@ public class PlayerController : MonoBehaviour
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
-
-                if (grounded && curUngroundedTime<0)
+                if (grounded)
                 {
-                    landed = true;
+                    frontAttack = false;
                 }
             }
             else if (backAttack)
@@ -314,33 +302,23 @@ public class PlayerController : MonoBehaviour
                     downAttack = false;
                 }
             }
-
-            //Cancel
-            if (landed)
-            {
-                if (bounce)
-                {
-                    frontAttack = false;
-                    backAttack = false;
-                    upAttack = false;
-                    downAttack = false;
-
-                    curVel = new Vector2(0, 0);
-                    rb.AddForce(bounceAmt, ForceMode.Impulse);
-
-                    grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
-                    grabbedObject.GetComponent<Rigidbody>().velocity = grabbedObject.GetComponent<Rigidbody>().velocity;
-                    grabbedObject.GetComponent<Rigidbody>().AddForce(transform.right * 1, ForceMode.Impulse);
-
-                }
-
-            }
         }
     }
 
     void FlipPlayer(bool r)   //Makes player face correct direction
     {
         transform.rotation = Quaternion.LookRotation(r ? Vector3.forward : -Vector3.forward, Vector3.up);
+    }
+
+    public  void Bounce()
+    {
+        if (powMove && dashInput)
+        {
+            frontAttack = false;
+            powMove = false;
+            curVel = new Vector2(0, 0);
+            rb.AddForce(bounceAmt, ForceMode.Impulse);
+        }
     }
 
     public void Hit(int amount, Vector3 kb, float stun)     //Getting hit by something with Damager component
