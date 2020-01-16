@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GrabCheck : MonoBehaviour
 {
+    public GameObject objectInRange;
     public bool grabbable;
-    public GameObject objectGrabbed;
 
     // Start is called before the first frame update
     void Start()
@@ -23,8 +23,8 @@ public class GrabCheck : MonoBehaviour
     {
         if (other.gameObject.GetComponent<GrabbableObject>())
         {
+            objectInRange = other.gameObject;
             grabbable = true;
-            objectGrabbed = other.gameObject;
         }
     }
 
@@ -32,8 +32,8 @@ public class GrabCheck : MonoBehaviour
     {
         if (other.gameObject.GetComponent<GrabbableObject>())
         {
+            objectInRange = null;
             grabbable = false;
-            objectGrabbed = null;
         }
     }
 }

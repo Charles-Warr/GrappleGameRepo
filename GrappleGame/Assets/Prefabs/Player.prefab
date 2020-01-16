@@ -285,21 +285,28 @@ MonoBehaviour:
   powMoveVel:
   - {x: 15, y: 30}
   - {x: -5, y: 3}
-  - {x: 1, y: 40}
+  - {x: 2, y: 40}
   - {x: 2, y: 1}
   DIMult: 2
   grounded: 0
   groundable: 0
+  canDash: 0
   dashing: 0
-  grabbing: 0
+  canGrab: 0
+  lifting: 0
+  canPow: 0
   powMove: 0
+  powCancel: 0
   grabbedObject: {fileID: 0}
   aiming: 0
   aimReticle: {fileID: 522962000}
   gravityMult: 3
-  powFallSpeed: 50
   regFallSpeed: 30
+  powFallSpeed: 50
+  curFallSpeed: 0
   groundSpeed: 15
+  airSpeed: 20
+  bounceAmt: {x: 1, y: 2}
   dashSpeed: 50
   dashSpeedMult: 2
   dashTime: 0.5
@@ -364,7 +371,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4, y: 1, z: 0.4}
+  m_Size: {x: 0.4, y: 1.5, z: 0.4}
   m_Center: {x: 0.15, y: 0, z: 0}
 --- !u!114 &7791024831927662681
 MonoBehaviour:

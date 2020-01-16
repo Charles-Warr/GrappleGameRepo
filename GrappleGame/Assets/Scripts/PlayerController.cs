@@ -39,11 +39,12 @@ public class PlayerController : MonoBehaviour
     //stats
     [SerializeField] float gravityMult;
     [SerializeField] float regFallSpeed = 30;
+    [SerializeField] float liftingFallSpeed = 15;
     [SerializeField] float powFallSpeed = 50;
     [SerializeField] float curFallSpeed;
     [SerializeField] float groundSpeed;
     [SerializeField] float airSpeed;
-    [SerializeField] float bounceAmt;
+    [SerializeField] Vector2 bounceAmt;
     [SerializeField] float dashSpeed = 50;
     [SerializeField] float dashSpeedMult = 2;
     [SerializeField] float dashTime = .5f;
@@ -61,35 +62,12 @@ public class PlayerController : MonoBehaviour
         groundable = true;
     }
 
-    /*
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.tag == "Wall")
-        {
-            cameraTrigger = false;
-        }
-    }
-    */
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.GetComponent<Wall>())
-        {
-            cameraTrigger = false;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if(other.gameObject.GetComponent<Wall>())
-        {
-            cameraTrigger = true;
-        }
-    }
-
+    
     // Update is called once per frame
     void Update()
     {
-        dirInf = (dirInput.normalized.x * transform.right.x) + 1 * DIMult;
+        dirInf = (dirInput.normalized.x);
+
         //Input
         {
             dirInput.x = Input.GetAxis("Horizontal");
@@ -101,48 +79,35 @@ public class PlayerController : MonoBehaviour
         //ground check
         {
             if(feet.GetComponent<FeetCheck>().grounded && groundable)
-            {
-                grounded = true;
-            }
+                grounded = true;        
             else
-            {
                 grounded = false;
-            }
+            
             if (grounded) 
-            {
                 curVel.y = 0;
-            }
-            if(!grounded || powMove)
-            {
+            else if(!grounded || powMove)
                 curVel.y -= -Physics.gravity.y * gravityMult * Time.deltaTime;
-            }
 
-            //check for not grounded timer
-            if (curUngroundedTime <= 0)
+            //ungrounded timer rules
             {
-                curUngroundedTime = 0;
-            }
-            if (curUngroundedTime >= ungroundedTime)
-            {
-                curUngroundedTime = ungroundedTime;
-            }
-            if (curUngroundedTime > 0 && powMove)
-            {
-                groundable = false;
-            }
-            else if (curUngroundedTime <= 0 && powMove)
-            {
-                groundable = true;
-            }
+                if (curUngroundedTime <= 0)
+                    curUngroundedTime = 0;
+                if (curUngroundedTime >= ungroundedTime)
+                    curUngroundedTime = ungroundedTime;
 
+                if (curUngroundedTime > 0 && powMove)
+                    groundable = false;   
+                
+                else if (curUngroundedTime <= 0)
+                    groundable = true;
+            }
         }
 
-        //dash time rules
+        //dash timer rules
         {
             if (canDash && dashInput)
-            {
                 dashing = true;
-            }
+            
             if (!dashing && !lifting)
             {
                 if (curDashTime < dashTime)
@@ -163,21 +128,18 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        grabbedObject = grabTrigger.GetComponent<GrabCheck>().objectGrabbed;
-
+        grabbedObject = grabTrigger.GetComponent<GrabCheck>().objectInRange;
         if (lifting)
         {
             if (dashInput)
-            {
                 lifting = false;
-            }
+
             else if (jumpInput && transform.right.x * dirInput.x > 0 && !powMove)
             {
                 curVel.x = 0;
                 curVel.y = 0;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
-                lifting = false;
                 frontAttack = true;
             }
             else if(jumpInput && transform.right.x * dirInput.x < 0 && !powMove)
@@ -186,7 +148,6 @@ public class PlayerController : MonoBehaviour
                 curVel.y = 0;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
-                lifting = false;
                 backAttack = true;
             }
             else if(jumpInput && transform.right.x * dirInput.y > 0 && !powMove)
@@ -195,7 +156,6 @@ public class PlayerController : MonoBehaviour
                 curVel.y = 0;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
-                lifting = false;
                 upAttack = true;
             }
             else if(jumpInput && transform.right.x * dirInput.y < 0 && !powMove)
@@ -204,69 +164,33 @@ public class PlayerController : MonoBehaviour
                 curVel.y = 0;
                 ungroundedTime = .7f;
                 curUngroundedTime = ungroundedTime;
-                lifting = false;
                 downAttack = true;
             }
         }
-
+        if (powMove)
+        {
+            lifting = false;
+        }
         if (!frontAttack && !backAttack && !upAttack && !downAttack)
         {
             powMove = false;
         }
-        if (frontAttack)
+        else
         {
             powMove = true;
-            canDash = false;
-            curUngroundedTime -= Time.deltaTime;
-            if (grounded && curUngroundedTime <= 0)
-            {
-                frontAttack = false;
-                lifting = false;
-                grabTrigger.SetActive(false);
-            }
         }
-        else if (backAttack)
-        {
-            powMove = true;
-            canDash = false;
-            curUngroundedTime -= Time.deltaTime;
-            if (grounded && curUngroundedTime <= 0)
-            {
-                backAttack = false;
-                lifting = false;
-                grabTrigger.SetActive(false);
-            }
-        }
-        else if (upAttack)
-        {
-            powMove = true;
-            canDash = false;
-            curUngroundedTime -= Time.deltaTime;
-            if (grounded && curUngroundedTime <= 0)
-            {
-                upAttack = false;
-                lifting = false;
-                grabTrigger.SetActive(false);
-            }
-        }
-        else if (downAttack)
-        {
-            powMove = true;
-            canDash = false;
-            curUngroundedTime -= Time.deltaTime;
-            if (grounded && curUngroundedTime <= 0)
-            {
-                downAttack = false;
-                lifting = false;
-                grabTrigger.SetActive(false);
-            }
-        }
+
     }
 
     //For Pyshics
     void FixedUpdate()
     {
         rb.velocity = curVel;
+
+        //Flip player if moving in opposite direction 
+        if (dirInput.x * transform.right.x < 0 && !dashing && !powMove)
+            FlipPlayer(dirInput.x > 0);
+
 
         //movement
         if (!dashing && !lifting && !powMove)
@@ -278,21 +202,6 @@ public class PlayerController : MonoBehaviour
                 curVel.y = -curFallSpeed;
             }
         }
-        if (powMove)
-        {
-            curFallSpeed = powFallSpeed;
-            if (curVel.y < -curFallSpeed)
-            {
-                curVel.y = -curFallSpeed;
-            }
-            
-        }
-
-        //Flip player if moving in opposite direction 
-        if (dirInput.x * transform.right.x < 0 && !dashing && !powMove)
-        {
-            FlipPlayer(dirInput.x > 0);
-        }
 
         //Dash Function
         {
@@ -301,87 +210,111 @@ public class PlayerController : MonoBehaviour
                 canDash = false;
                 canGrab = true;
                 curDashTime -= Time.deltaTime;
-                grabTrigger.SetActive(true);
                 curVel = transform.right * dashSpeed * curDashTime * dashSpeedMult;
+
                 if (grabTrigger.GetComponent<GrabCheck>().grabbable)
                 {
                     lifting = true;
                     dashing = false;
                 }
             }
-            else if(!dashing && !lifting && !powMove)
+            if(!dashing && !lifting && !powMove)
             {
                 canGrab = false;
-                grabTrigger.GetComponent<GrabCheck>().grabbable = false;
-                grabTrigger.GetComponent<GrabCheck>().objectGrabbed = null;
-                grabTrigger.SetActive(false);
+                grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
             }
+
         }
+        
 
         //Grab Function
         {
             if (lifting)
             {
                 canDash = false;
+                grabbedObject = grabTrigger.GetComponent<GrabCheck>().objectInRange;
+
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
-                curVel.x = 0;
-
+                curFallSpeed = liftingFallSpeed;
+                curVel.x = 0;            
             }
 
-            else if (frontAttack)
+            if (frontAttack)
             {
-                rb.AddForce(transform.up * powMoveVel[0] + curVel, ForceMode.Impulse);
-                rb.AddForce(transform.right * (powMoveVel[0] + curVel) * dirInf, ForceMode.Impulse);
+                curUngroundedTime -= Time.deltaTime;
+                rb.AddForce((powMoveVel[0].x * dirInf), (powMoveVel[0].y + curVel.y), 0, ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
 
+                if (grounded && curUngroundedTime<0)
+                {
+                    //bounce
+                    rb.AddForce(bounceAmt, ForceMode.Impulse);
+                    grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+                    grabbedObject.GetComponent<Rigidbody>().velocity = grabbedObject.GetComponent<Rigidbody>().velocity;
+                    frontAttack = false;
+                }
             }
             else if (backAttack)
             {
-                rb.AddForce(transform.up * powMoveVel[1], ForceMode.Impulse);
+                curUngroundedTime -= Time.deltaTime;
+                rb.AddForce(powMoveVel[1], ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+
+                if (grounded)
+                {
+                    backAttack = false;
+                }
             }
             else if (upAttack)
             {
-                rb.AddForce(transform.right * powMoveVel[2] * dirInf, ForceMode.Impulse);
-                rb.AddForce(transform.up * powMoveVel[2], ForceMode.Impulse);
+                curUngroundedTime -= Time.deltaTime;
+                rb.AddForce(powMoveVel[2] * dirInf, ForceMode.Impulse);               
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+
+                if (grounded)
+                {
+                    upAttack = false;
+                }
             }
             else if (downAttack)
             {
+                curUngroundedTime -= Time.deltaTime;
                 rb.AddForce(transform.right * powMoveVel[3] * dirInput, ForceMode.Impulse);
-                rb.AddForce(transform.up * powMoveVel[3], ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+
+                if (grounded)
+                {
+                    downAttack = false;
+                }
             }
 
-            else if(grounded)
+            //Cancel
+            if (powMove)
             {
-                grabbedObject.transform.parent = null;
-                grabbedObject.GetComponent<Rigidbody>().velocity = grabbedObject.GetComponent<Rigidbody>().velocity;
-            }
-            if (powMove && dashInput)
-            {
-                frontAttack = false;
-                backAttack = false;
-                upAttack = false;
-                downAttack = false;
-                rb.velocity = curVel;
-                grabbedObject.transform.parent = null;
-                grabTrigger.GetComponent<GrabCheck>().grabbable = false;
-                grabTrigger.GetComponent<GrabCheck>().objectGrabbed = null;
-                grabbedObject.GetComponent<Rigidbody>().velocity = grabbedObject.GetComponent<Rigidbody>().velocity;
-                grabbedObject.GetComponent<Rigidbody>().AddForce(transform.right * 1, ForceMode.Impulse);
-                rb.AddForce(transform.right * bounceAmt, ForceMode.Impulse);
-                rb.AddForce(transform.up * bounceAmt, ForceMode.Impulse);
+                if (dashInput)
+                {
+                    frontAttack = false;
+                    backAttack = false;
+                    upAttack = false;
+                    downAttack = false;
+
+                    curVel = new Vector2(0, 0);
+                    rb.AddForce(bounceAmt, ForceMode.Impulse);
+
+                    grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+                    grabbedObject.GetComponent<Rigidbody>().velocity = grabbedObject.GetComponent<Rigidbody>().velocity;
+                    grabbedObject.GetComponent<Rigidbody>().AddForce(transform.right * 1, ForceMode.Impulse);
+                }
             }
         }
 
