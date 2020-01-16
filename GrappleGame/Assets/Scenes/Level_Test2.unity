@@ -604,6 +604,36 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &288267487
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 288267488}
+  m_Layer: 0
+  m_Name: Respawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &288267488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288267487}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -34.5, y: 15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 24
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &300867886
 Mesh:
   m_ObjectHideFlags: 0
@@ -1762,6 +1792,16 @@ PrefabInstance:
         type: 3}
       propertyPath: maxHealth
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7791024831828347002, guid: 888c4a5894b0a674d8520c68a1cacc48,
+        type: 3}
+      propertyPath: lastCheckpoint
+      value: 
+      objectReference: {fileID: 288267487}
+    - target: {fileID: 7791024831828347002, guid: 888c4a5894b0a674d8520c68a1cacc48,
+        type: 3}
+      propertyPath: bounceAmt.y
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7791024831828347003, guid: 888c4a5894b0a674d8520c68a1cacc48,
         type: 3}

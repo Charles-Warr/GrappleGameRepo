@@ -363,6 +363,7 @@ public class PlayerController : MonoBehaviour
         alive = false;
         transform.position = lastCheckpoint.transform.position;
         curHealth = maxHealth;
+        alive = true;
     }
 
     void OnTriggerEnter(Collider other)
