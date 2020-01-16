@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] GameObject player;
+    private GameObject player;
 
-    [SerializeField] Vector3 offset;
-    [SerializeField] float smoothSpeed;
-    [SerializeField] float speedSmoothSpeed;
-    [SerializeField] float xMin;
-    [SerializeField] float xMax;
-    [SerializeField] float yMin;
-    [SerializeField] float yMax;
+    [SerializeField] Vector3 offset = new Vector3(0f, 1f, -25f);
+    [SerializeField] float smoothSpeed = 0.875f;
+    [SerializeField] float speedSmoothSpeed = 3f;
+    [SerializeField] float xMin = 0.4f;
+    [SerializeField] float xMax = 0.6f;
+    [SerializeField] float yMin = 0.4f;
+    [SerializeField] float yMax = 0.7f;
 
     private bool moveCamera;
 
     void Start()
     {
-
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
