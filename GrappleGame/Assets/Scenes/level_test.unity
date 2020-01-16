@@ -903,10 +903,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08dc3f9cea0765f4ca067d7796e877a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camVec: {x: 0, y: 0, z: 0}
-  zDist: -25
-  offset: {x: 0, y: 0, z: 0}
-  delay: 0
+  offset: {x: 0, y: 1, z: -25}
+  smoothSpeed: 0.875
+  speedSmoothSpeed: 3
+  xMin: 0.4
+  xMax: 0.6
+  yMin: 0.4
+  yMax: 0.7
 --- !u!43 &1138841909
 Mesh:
   m_ObjectHideFlags: 0
@@ -1398,20 +1401,27 @@ MonoBehaviour:
   DIMult: 0
   grounded: 0
   groundable: 0
+  canDash: 0
   dashing: 0
-  grabbing: 0
+  canGrab: 0
+  lifting: 0
+  canPow: 0
   powMove: 0
+  powCancel: 0
   grabbedObject: {fileID: 0}
   aiming: 0
   aimReticle: {fileID: 0}
   gravityMult: 0
-  powFallSpeed: 0
   regFallSpeed: 0
+  powFallSpeed: 0
+  curFallSpeed: 0
   groundSpeed: 10
+  airSpeed: 0
+  bounceAmt: 0
   dashSpeed: 0
+  dashSpeedMult: 2
   dashTime: 0
   curDashTime: 0
-  dashDelay: 0
   ungroundedTime: 0
   curUngroundedTime: 0
 --- !u!4 &1563056762 stripped
@@ -1785,7 +1795,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh18914
+  m_Name: pb_Mesh13796
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2930,6 +2940,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7791024831828347002, guid: 888c4a5894b0a674d8520c68a1cacc48,
+        type: 3}
+      propertyPath: cameraTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7791024831828347003, guid: 888c4a5894b0a674d8520c68a1cacc48,
         type: 3}
       propertyPath: m_Name
