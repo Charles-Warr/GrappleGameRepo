@@ -19,14 +19,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float DIMult;
 
     //checks
+    public float hitstun = 0;
+    public Vector2 knockback;
+    public bool vulnerable = true;
+    public bool alive = true;
+    [SerializeField] GameObject lastCheckpoint;
     [SerializeField] bool grounded;
     [SerializeField] bool groundable;
     [SerializeField] bool canDash;
     [SerializeField] bool dashing;
     [SerializeField] bool canGrab;
     [SerializeField] bool lifting;
+    [SerializeField] bool bounce;
     [SerializeField] bool canPow;
     [SerializeField] bool powMove;
+    [SerializeField] bool landed;
     bool frontAttack;
     bool backAttack;
     bool upAttack;
@@ -37,6 +44,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject aimReticle;
 
     //stats
+    public int maxHealth = 3;
+    public int curHealth;
     [SerializeField] float gravityMult;
     [SerializeField] float regFallSpeed = 30;
     [SerializeField] float liftingFallSpeed = 15;
@@ -62,19 +71,16 @@ public class PlayerController : MonoBehaviour
         groundable = true;
     }
 
-    
     // Update is called once per frame
     void Update()
     {
-        dirInf = (dirInput.normalized.x);
-
         //Input
         {
             dirInput.x = Input.GetAxis("Horizontal");
             dirInput.y = Input.GetAxis("Vertical");
             dashInput = Input.GetButtonDown("Fire3");
             jumpInput = Input.GetButtonDown("Jump");
-
+            dirInf = (dirInput.normalized.x +1 * Time.deltaTime);
         }
         //ground check
         {
@@ -100,6 +106,20 @@ public class PlayerController : MonoBehaviour
                 
                 else if (curUngroundedTime <= 0)
                     groundable = true;
+            }
+        }
+
+        //health
+        if (hitstun > 0)
+        {
+            if (rb != null)
+            {
+                curVel = (knockback);
+            }
+            hitstun -= Time.deltaTime;
+            if (hitstun < 0)
+            {
+                hitstun = 0;
             }
         }
 
@@ -167,18 +187,19 @@ public class PlayerController : MonoBehaviour
                 downAttack = true;
             }
         }
+
+        if(powMove && dashInput)
+            bounce = true;
+        if (powMove && grounded)
+            landed = true;
         if (powMove)
         {
             lifting = false;
         }
         if (!frontAttack && !backAttack && !upAttack && !downAttack)
-        {
             powMove = false;
-        }
         else
-        {
             powMove = true;
-        }
 
     }
 
@@ -251,11 +272,7 @@ public class PlayerController : MonoBehaviour
 
                 if (grounded && curUngroundedTime<0)
                 {
-                    //bounce
-                    rb.AddForce(bounceAmt, ForceMode.Impulse);
-                    grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
-                    grabbedObject.GetComponent<Rigidbody>().velocity = grabbedObject.GetComponent<Rigidbody>().velocity;
-                    frontAttack = false;
+                    landed = true;
                 }
             }
             else if (backAttack)
@@ -299,9 +316,9 @@ public class PlayerController : MonoBehaviour
             }
 
             //Cancel
-            if (powMove)
+            if (landed)
             {
-                if (dashInput)
+                if (bounce)
                 {
                     frontAttack = false;
                     backAttack = false;
@@ -314,10 +331,11 @@ public class PlayerController : MonoBehaviour
                     grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
                     grabbedObject.GetComponent<Rigidbody>().velocity = grabbedObject.GetComponent<Rigidbody>().velocity;
                     grabbedObject.GetComponent<Rigidbody>().AddForce(transform.right * 1, ForceMode.Impulse);
+
                 }
+
             }
         }
-
     }
 
     void FlipPlayer(bool r)   //Makes player face correct direction
@@ -325,4 +343,36 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(r ? Vector3.forward : -Vector3.forward, Vector3.up);
     }
 
+    public void Hit(int amount, Vector3 kb, float stun)     //Getting hit by something with Damager component
+    {
+        if (vulnerable)
+        {
+            curHealth -= amount;
+            if (curHealth <= 0 && alive)
+            {
+                Die();
+            }
+        }
+        hitstun = stun;
+        knockback = kb;
+
+    }
+
+    void Die()
+    {
+        alive = false;
+        transform.position = lastCheckpoint.transform.position;
+        curHealth = maxHealth;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<Damager>())
+        {
+
+            Hit(other.gameObject.GetComponent<Damager>().damage,
+                other.gameObject.GetComponent<Damager>().knockback,
+                other.gameObject.GetComponent<Damager>().hitstun);
+        }
+    }
 }

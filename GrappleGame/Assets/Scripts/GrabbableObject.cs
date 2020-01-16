@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GrabbableObject : MonoBehaviour
 {
+    public bool objGrounded;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +16,19 @@ public class GrabbableObject : MonoBehaviour
     void Update()
     {
         
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<Ground>())
+        {
+            objGrounded = true;
+        }
+    }
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<Ground>())
+        {
+            objGrounded = false;
+        }
     }
 }
