@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private GameObject player;
+    [SerializeField] GameObject player;
 
     [SerializeField] Vector3 offset;
     [SerializeField] float smoothSpeed;
@@ -18,7 +18,6 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
 
     }
 
