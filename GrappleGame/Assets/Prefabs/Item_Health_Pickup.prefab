@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6110774222876945769
+--- !u!1 &968122558129654243
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7104020628229283706}
-  - component: {fileID: 2291641306598368588}
-  - component: {fileID: 5544215688188762549}
-  - component: {fileID: -1799783586520263581}
-  - component: {fileID: 4041027362887836810}
-  - component: {fileID: 7724917331095321745}
+  - component: {fileID: 4266087037042080752}
+  - component: {fileID: 5075320598201467334}
+  - component: {fileID: 1536748210260704575}
+  - component: {fileID: 247049161956426770}
   m_Layer: 0
-  m_Name: Item_Crate_Metal
+  m_Name: Item_Health_Pickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7104020628229283706
+--- !u!4 &4266087037042080752
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6110774222876945769}
+  m_GameObject: {fileID: 968122558129654243}
   m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 42.021667, y: 1.5, z: -1}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: 21.878902, y: 0.5, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2291641306598368588
+--- !u!33 &5075320598201467334
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6110774222876945769}
-  m_Mesh: {fileID: 4493585093827132993, guid: 30179aea7624a4f448ce32b140190a61, type: 3}
---- !u!23 &5544215688188762549
+  m_GameObject: {fileID: 968122558129654243}
+  m_Mesh: {fileID: -462981019419857548, guid: 24e30bf47c7d53b4585d1f8175c92de3, type: 3}
+--- !u!23 &1536748210260704575
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6110774222876945769}
+  m_GameObject: {fileID: 968122558129654243}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -60,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e1da1ab4dd931ef4ca93f0f41f4c84b3, type: 2}
+  - {fileID: 2100000, guid: d6ec4698c7ab2a445b45ad7ce84d4be4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -81,45 +79,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!54 &-1799783586520263581
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6110774222876945769}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 3
---- !u!65 &4041027362887836810
+--- !u!65 &247049161956426770
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6110774222876945769}
+  m_GameObject: {fileID: 968122558129654243}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.0000002, y: 1, z: 1.0000002}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7724917331095321745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6110774222876945769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b98ff6ef31e5954caedc8422e739327, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objGrounded: 0
+  m_Size: {x: 0.43031433, y: 0.8422496, z: 0.97897863}
+  m_Center: {x: 0, y: 0.4210703, z: 0}
