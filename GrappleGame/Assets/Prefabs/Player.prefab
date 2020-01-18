@@ -149,8 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41f2202f68a9064497eee4e3ee86076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectInRange: {fileID: 0}
   grabbable: 0
-  objectGrabbed: {fileID: 0}
 --- !u!1 &7791024831828347003
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,6 +279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feet: {fileID: 7791024831927662676}
   grabTrigger: {fileID: 2011576550}
+  healthUI: {fileID: 0}
   cameraTrigger: 0
   dirInf: 0
   curVel: {x: 0, y: 0}
@@ -288,25 +289,33 @@ MonoBehaviour:
   - {x: 2, y: 40}
   - {x: 2, y: 1}
   DIMult: 2
+  hitstun: 0
+  knockback: {x: 0, y: 0}
+  vulnerable: 1
+  alive: 1
+  lastCheckpoint: {fileID: 0}
   grounded: 0
   groundable: 0
   canDash: 0
   dashing: 0
-  canGrab: 0
   lifting: 0
   canPow: 0
   powMove: 0
+  landed: 0
   powCancel: 0
   grabbedObject: {fileID: 0}
   aiming: 0
   aimReticle: {fileID: 522962000}
+  maxHealth: 3
+  curHealth: 0
   gravityMult: 3
   regFallSpeed: 30
+  liftingFallSpeed: 15
   powFallSpeed: 50
   curFallSpeed: 0
   groundSpeed: 15
   airSpeed: 20
-  bounceAmt: {x: 1, y: 2}
+  bounceAmt: {x: 1, y: 5}
   dashSpeed: 50
   dashSpeedMult: 2
   dashTime: 0.5
