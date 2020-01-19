@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool lifting;
     [SerializeField] bool canPow;
     [SerializeField] bool powMove;
+    [SerializeField] bool didPowMove;
     [SerializeField] bool landed;
     bool frontAttack;
     bool backAttack;
@@ -102,7 +103,7 @@ public class PlayerController : MonoBehaviour
                 if (curUngroundedTime >= ungroundedTime)
                     curUngroundedTime = ungroundedTime;
 
-                if (curUngroundedTime > 0 && powMove)
+                if (curUngroundedTime > 0 && powMove || curUngroundedTime > 0 && didPowMove)
                     groundable = false;
 
                 else if (curUngroundedTime <= 0)
@@ -197,7 +198,7 @@ public class PlayerController : MonoBehaviour
                 downAttack = true;
             }
         }
-        if (powMove)
+        if (didPowMove)
         {
             vulnerable = false;
             if (dashInput)
@@ -209,10 +210,10 @@ public class PlayerController : MonoBehaviour
                 lifting = false;
             }
         }
-        if (frontAttack || backAttack || upAttack || downAttack)
-            powMove = true;
-        else if (!frontAttack && !backAttack && !upAttack && !downAttack)
+        if (!frontAttack && !backAttack && !upAttack && !downAttack)
             powMove = false;
+        else if (frontAttack || backAttack || upAttack || downAttack)
+            powMove = true;
 
     }
 
@@ -276,7 +277,6 @@ public class PlayerController : MonoBehaviour
         }
 
         //Pow Move Function
-        if(powMove)
         {
             if (frontAttack)
             {
@@ -288,7 +288,10 @@ public class PlayerController : MonoBehaviour
                 if (grounded && curUngroundedTime <= 0)
                 {
                     lifting = false;
+                    ungroundedTime = .5f;
+                    curUngroundedTime = ungroundedTime;
                     grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+                    didPowMove = true;
                     frontAttack = false;
                 }
             }
@@ -303,6 +306,7 @@ public class PlayerController : MonoBehaviour
                 {
                     lifting = false;
                     grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+                    didPowMove = true;
                     backAttack = false;
                 }
             }
@@ -317,6 +321,7 @@ public class PlayerController : MonoBehaviour
                 {
                     lifting = false;
                     grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+                    didPowMove = true;
                     upAttack = false;
                 }
             }
@@ -331,8 +336,22 @@ public class PlayerController : MonoBehaviour
                 {
                     lifting = false;
                     grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+                    didPowMove = true;
                     downAttack = false;
                 }
+            }
+        }
+
+        //Bounce
+        if (didPowMove)
+        {
+            curUngroundedTime -= Time.deltaTime;
+            powMove = false;
+            curVel = new Vector2(0, 0);
+            rb.AddForce(bounceAmt, ForceMode.Impulse);
+            if (grounded && curUngroundedTime <= 0 && !powMove)
+            {
+                didPowMove = false;
             }
         }
     }
