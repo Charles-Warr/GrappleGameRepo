@@ -34,10 +34,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool canPow;
     [SerializeField] bool powMove;
     [SerializeField] bool landed;
-    bool frontAttack;
-    bool backAttack;
-    bool upAttack;
-    bool downAttack;
+    public bool frontAttack;
+    public bool backAttack;
+    public bool upAttack;
+    public bool downAttack;
     [SerializeField] bool powCancel;
     [SerializeField] GameObject grabbedObject;
     [SerializeField] bool aiming;
@@ -164,11 +164,11 @@ public class PlayerController : MonoBehaviour
             if (dashInput && !powMove)
                 lifting = false;
             
-
             else if (jumpInput && transform.right.x * dirInput.x > 0 && !powMove) //Front Pow Input
             {
                 curVel.x = 0;
                 curVel.y = 0;
+                powFallSpeed = 40;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
                 frontAttack = true;
@@ -178,6 +178,7 @@ public class PlayerController : MonoBehaviour
             {
                 curVel.x = 0;
                 curVel.y = 0;
+                powFallSpeed = 40;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
                 backAttack = true;
@@ -187,6 +188,7 @@ public class PlayerController : MonoBehaviour
             {
                 curVel.x = 0;
                 curVel.y = 0;
+                powFallSpeed = 60;
                 ungroundedTime = .5f;
                 curUngroundedTime = ungroundedTime;
                 upAttack = true;
@@ -196,6 +198,7 @@ public class PlayerController : MonoBehaviour
             {
                 curVel.x = 0;
                 curVel.y = 0;
+                powFallSpeed = 13;
                 ungroundedTime = .7f;
                 curUngroundedTime = ungroundedTime;
                 downAttack = true;
@@ -205,6 +208,7 @@ public class PlayerController : MonoBehaviour
 
         if (powMove)
         {
+            curFallSpeed = powFallSpeed;
             vulnerable = false;
             if (dashInput) //Cancel Input
             {
@@ -215,10 +219,10 @@ public class PlayerController : MonoBehaviour
                 curUngroundedTime = ungroundedTime;
             }
         }
+
         if (!frontAttack && !backAttack && !upAttack && !downAttack)
             powMove = false;
-        if (powMove == false)
-            frontAttack = false; backAttack = false; upAttack = false; downAttack = false;
+
         if(!lifting && !powMove)
         {
             grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
@@ -233,7 +237,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = curVel;
 
         //Flip player if moving in opposite direction 
-        if (dirInput.x * transform.right.x < 0 && !dashing && !powMove)
+        if (dirInput.normalized.x * transform.right.x < 0 && !dashing && !powMove)
             FlipPlayer(dirInput.x > 0);
 
 
@@ -242,10 +246,10 @@ public class PlayerController : MonoBehaviour
         {
             curVel = new Vector3(dirInput.x * groundSpeed, curVel.y);
             curFallSpeed = regFallSpeed;
-            if (curVel.y < -curFallSpeed)
-            {
-                curVel.y = -curFallSpeed;
-            }
+        }
+        if (curVel.y < -curFallSpeed)
+        {
+            curVel.y = -curFallSpeed;
         }
 
         //Dash Function
@@ -294,6 +298,7 @@ public class PlayerController : MonoBehaviour
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+
                 if (grounded && curUngroundedTime <= 0)
                 {
                     lifting = false;
@@ -306,10 +311,11 @@ public class PlayerController : MonoBehaviour
             }
             else if (backAttack)
             {
-                rb.AddForce(powMoveVel[1] * dirInf , ForceMode.Impulse);
+                rb.AddForce((powMoveVel[1].x * -dirInf), (powMoveVel[1].y + curVel.y), 0, ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+
                 if (grounded && curUngroundedTime <= 0)
                 {
                     lifting = false;
@@ -322,10 +328,11 @@ public class PlayerController : MonoBehaviour
             }
             else if (upAttack)
             {
-                rb.AddForce((powMoveVel[2].x * dirInf), (powMoveVel[2].y + curVel.y), 0, ForceMode.Impulse);               
+                rb.AddForce((powMoveVel[2].x * dirInf), (powMoveVel[2].y + curVel.y), 0, ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+
                 if (grounded && curUngroundedTime <= 0)
                 {
                     lifting = false;
@@ -338,10 +345,11 @@ public class PlayerController : MonoBehaviour
             }
             else if (downAttack)
             {
-                rb.AddForce(powMoveVel[3] * dirInput, ForceMode.Impulse);
+                rb.AddForce((powMoveVel[3].x * dirInf), (powMoveVel[3].y + curVel.y), 0, ForceMode.Impulse);
                 grabbedObject.transform.parent = grabTrigger.transform;
                 grabbedObject.transform.position = grabTrigger.transform.position;
                 grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+
                 if (grounded && curUngroundedTime <= 0)
                 {
                     lifting = false;
@@ -418,11 +426,11 @@ public class PlayerController : MonoBehaviour
         //Damager component overlap
         if (other.gameObject.GetComponent<Damager>())
         {
-
             Hit(other.gameObject.GetComponent<Damager>().damage,
                 other.gameObject.GetComponent<Damager>().knockback,
                 other.gameObject.GetComponent<Damager>().hitstun);
         }
+
         //Health component overlap
         if (other.gameObject.GetComponent<HealthPickup>())
         {

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4041027362887836810}
   - component: {fileID: 7724917331095321745}
   m_Layer: 0
-  m_Name: Item_Crate_Metal
+  m_Name: Item_CrateMetal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 120
   m_CollisionDetection: 3
 --- !u!65 &4041027362887836810
 BoxCollider:
@@ -122,4 +122,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b98ff6ef31e5954caedc8422e739327, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objBottom: {fileID: 0}
   objGrounded: 0

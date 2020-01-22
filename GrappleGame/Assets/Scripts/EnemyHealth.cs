@@ -6,26 +6,52 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int health = 1;
-
-    private GameObject self;
+    public int maxHealth;
+    public int curHealth;
+    public bool vulnerable = true;
+    public bool alive = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        self = this.gameObject;
+        curHealth = maxHealth;
     }
 
-    void checkHealth()
-    {
-        if(health <= 0)
-        {
-            self.SetActive(false);
-        }
-    }
     // Update is called once per frame
     void Update()
     {
-        checkHealth();
+        if (curHealth <= 0)
+        {
+            Die();
+        }
+    }
+    public void Hit(int amount)     //Getting hit by something with Damager component
+    {
+        if (vulnerable)
+        {
+            curHealth -= amount;
+            if (curHealth <= 0 && alive)
+            {
+                Die();
+            }
+        }
+        else if (amount >= 999)
+        {
+            Die();
+        }
+    }
+    void Die()
+    {
+        alive = false;
+        gameObject.SetActive(false);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        //Damager component overlap
+        if (other.gameObject.GetComponent<Damager>())
+        {
+            Hit(other.gameObject.GetComponent<Damager>().damage);
+        }
     }
 }
