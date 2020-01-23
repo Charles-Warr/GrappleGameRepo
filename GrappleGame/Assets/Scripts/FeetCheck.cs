@@ -20,7 +20,7 @@ public class FeetCheck : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.GetComponent<Ground>())
+        if(other.gameObject.GetComponent<Ground>() || other.gameObject.GetComponent<GrabbableObject>())
         {
             grounded = true;
         }
@@ -29,7 +29,7 @@ public class FeetCheck : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.GetComponent<Ground>())
+        if(other.gameObject.GetComponent<Ground>() || other.gameObject.GetComponent<GrabbableObject>())
         {
             grounded = false;
         }
