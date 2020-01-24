@@ -44,6 +44,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool aiming;
     [SerializeField] GameObject aimReticle;
 
+    [SerializeField] float timer;
+    [SerializeField] float timerStart;
+    [SerializeField] float maxContinuousGrabs;
+    [SerializeField] float currentGrabs;
+
     //stats
     public int maxHealth = 3;
     public int curHealth;
@@ -61,7 +66,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float curDashTime;
     [SerializeField] float ungroundedTime;
     [SerializeField] float curUngroundedTime;
-
+    
 
     // Start is called before the first frame update
     void Start()
@@ -71,6 +76,8 @@ public class PlayerController : MonoBehaviour
         groundable = true;
         curHealth = maxHealth;
         curDashTime = dashTime;
+        timerStart = timer;
+        currentGrabs = 0f;
     }
 
     // Update is called once per frame
@@ -94,7 +101,7 @@ public class PlayerController : MonoBehaviour
             if (grounded)
                 curVel.y = 0;
             else if (!grounded || powMove)
-                curVel.y -= -Physics.gravity.y * gravityMult * Time.deltaTime;
+                curVel.y += Physics.gravity.y * gravityMult * Time.deltaTime;
 
             //ungrounded timer rules
             {
@@ -135,6 +142,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+
+
         //dash timer rules
         {
             if (canDash && dashInput)
@@ -158,6 +167,11 @@ public class PlayerController : MonoBehaviour
                 curDashTime = 0;
                 dashing = false;
             }
+        }
+
+        if(grabbedObject == null)
+        {
+            lifting = false;
         }
 
         if (lifting)
@@ -210,8 +224,27 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        
+        //Check how many consecutive grabs, if reach max set can grab to false, start Timer
+        
+        if(!grounded && Input.GetButtonDown("Fire3"))
+        {
+            applyDamage();
+            currentGrabs++;
+            if(currentGrabs >= maxContinuousGrabs)
+            {
+                canDash = false;
+
+            }
+            else
+            {
+
+            }
+        }
+        
         if (powMove)
         {
+            canDash = false;
             curFallSpeed = powFallSpeed;
             vulnerable = false;
             if (dashInput) //Cancel Input
@@ -295,9 +328,39 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(r ? Vector3.forward : -Vector3.forward, Vector3.up);
     }
 
+    // This activates the timer for each power move;
+    void activateTimer()
+    {
+        timer -= Time.deltaTime;
+
+        if(timer <= 0)
+        {
+
+            frontAttack = canDash = backAttack = upAttack = downAttack = powMove = false;
+            timer = timerStart;
+            applyDamage();
+        }
+    }
+
+    void applyDamage()
+    {
+        if(grabbedObject.GetComponent<EnemyHealth>())
+        {
+            grabbedObject.GetComponent<EnemyHealth>().Hit(1);
+            grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+            grabbedObject = null;
+
+        }
+
+        lifting = false;
+        vulnerable = true;
+    }
+
     //Pow Move Function
     void PowerMove()
     {
+        canDash = false;
+        activateTimer();
         if (frontAttack)
         {
             rb.AddForce((powMoveVel[0].x * dirInf), (powMoveVel[0].y + curVel.y), 0, ForceMode.Impulse);

@@ -42,8 +42,10 @@ public class EnemyHealth : MonoBehaviour
     }
     void Die()
     {
+        
         alive = false;
         gameObject.SetActive(false);
+        Destroy(this.gameObject);
     }
 
     void OnTriggerEnter(Collider other)
