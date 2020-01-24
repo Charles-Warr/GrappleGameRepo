@@ -415,11 +415,12 @@ public class PlayerController : MonoBehaviour
 
         if(timer <= 0)
         {
+            frontAttack = canDash = backAttack = upAttack = downAttack = powMove = false;
             if (grounded || grabbedObject.GetComponentInChildren<FeetCheck>().grounded)
             {
 
 
-                frontAttack = canDash = backAttack = upAttack = downAttack = powMove = false;
+                
                 timer = timerStart;
                 applyDamage();
             }
