@@ -140,6 +140,7 @@ MonoBehaviour:
   powMove: 0
   landed: 0
   bounceIntensity: 0
+  bounceValue: 100
   frontAttack: 0
   backAttack: 0
   upAttack: 0
@@ -148,6 +149,7 @@ MonoBehaviour:
   grabbedObject: {fileID: 0}
   aiming: 0
   aimReticle: {fileID: 3766626632716637193}
+  slopeVelocity: 2
   timer: 1
   timerStart: 0
   maxContinuousGrabs: 1
@@ -179,7 +181,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3766626631802724163}
-  - component: {fileID: 3766626631802724162}
+  - component: {fileID: 7424333151632019133}
   - component: {fileID: 5415344022384313143}
   m_Layer: 0
   m_Name: Hitbox
@@ -202,19 +204,20 @@ Transform:
   m_Father: {fileID: 3766626631732052136}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3766626631802724162
-BoxCollider:
+--- !u!136 &7424333151632019133
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3766626631802724161}
-  m_Material: {fileID: 13400000, guid: e81daeadb7167a44582c990b4dbeb62d, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.2, y: 1.9, z: 1}
-  m_Center: {x: 0, y: 0.1, z: 0}
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5415344022384313143
 MonoBehaviour:
   m_ObjectHideFlags: 0

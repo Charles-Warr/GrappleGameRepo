@@ -35,7 +35,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool canPow;
     [SerializeField] bool powMove;
     [SerializeField] bool landed;
-    [SerializeField] float bounceIntensity = 100f;
+    [SerializeField] float bounceIntensity;
+    public float bounceValue = 100f;
     public bool frontAttack;
     public bool backAttack;
     public bool upAttack;
@@ -44,6 +45,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject grabbedObject;
     [SerializeField] bool aiming;
     [SerializeField] GameObject aimReticle;
+
+    [SerializeField] float slopeVelocity = 2f;
 
     [SerializeField] float timer = 0.2f;
     [SerializeField] float timerStart;
@@ -85,7 +88,7 @@ public class PlayerController : MonoBehaviour
         timerStart = timer;
         hitTimerStart = hitTimer;
         currentGrabs = 0f;
-        bounceIntensity = 100f;
+        bounceIntensity = bounceValue;
     }
 
     // Update is called once per frame
@@ -335,6 +338,22 @@ public class PlayerController : MonoBehaviour
         if (!dashing && !lifting && !powMove)
         {
             curVel = new Vector3(dirInput.x * groundSpeed, curVel.y);
+
+            Debug.DrawRay(new Vector3(rb.position.x+(.5f*rb.transform.right.x), rb.position.y-.5f, rb.position.z), gameObject.transform.right, Color.red);
+
+            RaycastHit slopes;
+
+            if(Physics.Raycast(new Vector3(rb.position.x + (.5f * rb.transform.right.x), rb.position.y - .5f, rb.position.z), gameObject.transform.right,out slopes, 1f))
+            {
+                if(slopes.collider.GetComponent<Ground>())
+                {
+                    curVel = new Vector2(dirInput.x * groundSpeed, curVel.y + slopeVelocity);
+                    //curVel += Vector2.up * slopeVelocity;
+                }
+            }
+
+         
+
             curFallSpeed = regFallSpeed;
         }
         if (curVel.y < -curFallSpeed)

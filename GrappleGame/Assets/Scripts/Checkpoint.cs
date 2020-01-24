@@ -5,17 +5,18 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour
 {
     public float checkPointNumber;
+    private Transform spawnPosition;
     // Start is called before the first frame update
     void Start()
     {
-        
+        spawnPosition = gameObject.GetComponentInParent<Transform>();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if(other.gameObject.GetComponent<TakeDamage>())
         {
-            GameObject.FindGameObjectWithTag("Respawn").transform.position = this.transform.position;
+            GameObject.FindGameObjectWithTag("Respawn").transform.position = new Vector3(spawnPosition.position.x, spawnPosition.position.y, GameObject.FindGameObjectWithTag("Respawn").transform.position.z);
             gameObject.SetActive(false);
         }
     }
