@@ -14,6 +14,20 @@ public class Damager : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.GetComponent<TakeDamage>())
+        {
+            Debug.Log("Player");
+
+            other.gameObject.GetComponent<TakeDamage>().applyDamage(damage);
+                 
+            //other.gameObject
+        }
+    }
+
+
+
     // Update is called once per frame
     void Update()
     {

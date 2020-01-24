@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private GameObject player;
+    [SerializeField] GameObject player;
 
     [SerializeField] Vector3 offset = new Vector3(0f, 1f, -25f);
     [SerializeField] float smoothSpeed = 0.875f;
@@ -25,7 +25,6 @@ public class CameraFollow : MonoBehaviour
     {
         moveCamera = checkPlayerPos();
 
-        
     }
 
     void FixedUpdate()

@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool canPow;
     [SerializeField] bool powMove;
     [SerializeField] bool landed;
-    [SerializeField] float bounceIntensity;
+    [SerializeField] float bounceIntensity = 100f;
     public bool frontAttack;
     public bool backAttack;
     public bool upAttack;
@@ -45,24 +45,27 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool aiming;
     [SerializeField] GameObject aimReticle;
 
-    [SerializeField] float timer;
+    [SerializeField] float timer = 0.2f;
     [SerializeField] float timerStart;
     [SerializeField] float maxContinuousGrabs;
     [SerializeField] float currentGrabs;
 
+    [SerializeField] float hitTimer = 1f;
+    [SerializeField] float hitTimerStart;
+
     //stats
     public int maxHealth = 3;
     public int curHealth;
-    [SerializeField] float gravityMult;
+    [SerializeField] float gravityMult = 3f;
     [SerializeField] float regFallSpeed = 30;
     [SerializeField] float liftingFallSpeed = 15;
     [SerializeField] float powFallSpeed = 50;
     [SerializeField] float curFallSpeed;
     [SerializeField] float groundSpeed;
     [SerializeField] float airSpeed;
-    [SerializeField] Vector2 bounceAmt;
+    [SerializeField] Vector2 bounceAmt = new Vector2(-5f, 10f);
     [SerializeField] float dashSpeed = 50;
-    [SerializeField] float dashSpeedMult = 2;
+    [SerializeField] float dashSpeedMult = 1.61f;
     [SerializeField] float dashTime = .5f;
     [SerializeField] float curDashTime;
     [SerializeField] float ungroundedTime;
@@ -73,13 +76,16 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        healthUI = GameObject.FindGameObjectWithTag("Health");
         cameraTrigger = true;
         groundable = true;
         bounce = false;
         curHealth = maxHealth;
         curDashTime = dashTime;
         timerStart = timer;
+        hitTimerStart = hitTimer;
         currentGrabs = 0f;
+        bounceIntensity = 100f;
     }
 
     // Update is called once per frame
@@ -135,7 +141,12 @@ public class PlayerController : MonoBehaviour
             healthUI.GetComponent<TextMeshProUGUI>().text = "Health:" + curHealth;
 
             if (curHealth <= 0)
+            {
                 curHealth = 0;
+
+                gameObject.GetComponent<PlayerController>().enabled = false;
+            }
+                
             if (curHealth >= maxHealth)
                 curHealth = maxHealth;
 
@@ -151,6 +162,8 @@ public class PlayerController : MonoBehaviour
                     hitstun = 0;
                 }
             }
+
+            
         }
 
 
@@ -236,6 +249,24 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if(vulnerable && hitbox.GetComponent<TakeDamage>().hit)
+        {
+            hitbox.GetComponent<TakeDamage>().setHit(false);
+            
+            curHealth -= (int)hitbox.GetComponent<TakeDamage>().damage;
+
+            bounce = true;
+
+            //activateHitTimer();
+
+            vulnerable = false;
+
+        }
+
+        if(!vulnerable)
+        {
+            activateHitTimer();
+        }
         
         //Check how many consecutive grabs, if reach max set can grab to false, start Timer
         
@@ -271,6 +302,20 @@ public class PlayerController : MonoBehaviour
 
         if (!frontAttack && !backAttack && !upAttack && !downAttack)
             powMove = false;
+    }
+
+    void activateHitTimer()
+    {
+
+            hitTimer -= Time.deltaTime;
+
+            if (hitTimer <= 0)
+            {
+                vulnerable = true;
+
+                hitTimer = hitTimerStart;
+            }
+        
     }
 
     //For Pyshics
@@ -351,7 +396,7 @@ public class PlayerController : MonoBehaviour
 
         if(timer <= 0)
         {
-            if (grounded)
+            if (grounded || grabbedObject.GetComponentInChildren<FeetCheck>().grounded)
             {
 
 

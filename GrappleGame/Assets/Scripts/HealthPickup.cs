@@ -12,6 +12,15 @@ public class HealthPickup : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.GetComponent<TakeDamage>())
+        {
+            other.gameObject.GetComponentInParent<PlayerController>().Heal(healthAmt);
+            gameObject.SetActive(false);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {

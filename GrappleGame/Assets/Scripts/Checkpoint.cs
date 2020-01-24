@@ -15,6 +15,7 @@ public class Checkpoint : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
+            GameObject.FindGameObjectWithTag("Respawn").transform.position = this.transform.position;
             gameObject.SetActive(false);
         }
     }
