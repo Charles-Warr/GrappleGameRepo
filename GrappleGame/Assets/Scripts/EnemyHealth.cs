@@ -10,6 +10,7 @@ public class EnemyHealth : MonoBehaviour
     public int curHealth;
     public bool vulnerable = true;
     public bool alive = true;
+    public GameObject spawnItem;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,7 @@ public class EnemyHealth : MonoBehaviour
     {
         if (curHealth <= 0)
         {
-            Die();
+            
         }
     }
     public void Hit(int amount)     //Getting hit by something with Damager component
@@ -32,6 +33,7 @@ public class EnemyHealth : MonoBehaviour
             curHealth -= amount;
             if (curHealth <= 0 && alive)
             {
+                Instantiate(spawnItem, transform.position, Quaternion.identity);
                 Die();
             }
         }
