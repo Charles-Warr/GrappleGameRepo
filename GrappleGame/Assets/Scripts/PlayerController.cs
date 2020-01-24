@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool canPow;
     [SerializeField] bool powMove;
     [SerializeField] bool landed;
+    [SerializeField] float bounceIntensity;
     public bool frontAttack;
     public bool backAttack;
     public bool upAttack;
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         cameraTrigger = true;
         groundable = true;
+        bounce = false;
         curHealth = maxHealth;
         curDashTime = dashTime;
         timerStart = timer;
@@ -91,6 +93,15 @@ public class PlayerController : MonoBehaviour
             jumpInput = Input.GetButtonDown("Jump");
 
         }
+
+        //Slope check
+        {
+            RaycastHit slopes;
+
+            //Physics.Raycast(new Vector3(this.transform.position.x-1, transform.position.y,transform.position.z), transform.right, 1f, slopes);
+
+        }
+
         //ground check
         {
             if (feet.GetComponent<FeetCheck>().grounded && groundable)
@@ -169,6 +180,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // CHUCK ADDED THIS
         if(grabbedObject == null)
         {
             lifting = false;
@@ -229,7 +241,7 @@ public class PlayerController : MonoBehaviour
         
         if(!grounded && Input.GetButtonDown("Fire3"))
         {
-            applyDamage();
+            lifting = false;
             currentGrabs++;
             if(currentGrabs >= maxContinuousGrabs)
             {
@@ -264,6 +276,10 @@ public class PlayerController : MonoBehaviour
     //For Pyshics
     void FixedUpdate()
     {
+        if (bounce)
+        {
+            Bounce();
+        }
         rb.velocity = curVel;
 
         //Flip player if moving in opposite direction 
@@ -335,10 +351,14 @@ public class PlayerController : MonoBehaviour
 
         if(timer <= 0)
         {
+            if (grounded)
+            {
 
-            frontAttack = canDash = backAttack = upAttack = downAttack = powMove = false;
-            timer = timerStart;
-            applyDamage();
+
+                frontAttack = canDash = backAttack = upAttack = downAttack = powMove = false;
+                timer = timerStart;
+                applyDamage();
+            }
         }
     }
 
@@ -354,6 +374,7 @@ public class PlayerController : MonoBehaviour
 
         lifting = false;
         vulnerable = true;
+        bounce = true;
     }
 
     //Pow Move Function
@@ -386,7 +407,19 @@ public class PlayerController : MonoBehaviour
     //Bounce
     void Bounce()
     {
+        bounce = false;
+        applyBounce();
+    }
 
+    void activateBounce()
+    {
+
+    }
+
+    void applyBounce()
+    {
+        rb.velocity = Vector3.zero;
+        rb.AddForce((-transform.right+transform.up)*bounceIntensity, ForceMode.Impulse); 
     }
 
     //Health Pickup
