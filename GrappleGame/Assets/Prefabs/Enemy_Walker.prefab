@@ -72,10 +72,10 @@ GameObject:
   - component: {fileID: 8937266489172182881}
   - component: {fileID: 8937266489172182880}
   - component: {fileID: 8937266489172182886}
-  - component: {fileID: 6322142837555364853}
   - component: {fileID: 9130105379948853650}
   - component: {fileID: 8937266489172182885}
   - component: {fileID: 4274993102217560516}
+  - component: {fileID: 8367124897517681278}
   m_Layer: 0
   m_Name: Enemy_Walker
   m_TagString: Enemy
@@ -163,19 +163,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 2
---- !u!65 &6322142837555364853
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8937266489172182884}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1.8, z: 1}
-  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!114 &9130105379948853650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,6 +209,21 @@ MonoBehaviour:
   curHealth: 0
   vulnerable: 1
   alive: 1
+  spawnItem: {fileID: 0}
+--- !u!136 &8367124897517681278
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8937266489172182884}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8937266489705271920
 GameObject:
   m_ObjectHideFlags: 0

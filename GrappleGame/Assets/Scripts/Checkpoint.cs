@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    public float checkPointNumber;
+    
     private Transform spawnPosition;
     // Start is called before the first frame update
     void Start()

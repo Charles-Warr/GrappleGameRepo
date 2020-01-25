@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxContinuousGrabs;
     [SerializeField] float currentGrabs;
 
-    [SerializeField] float hitTimer = 1f;
+    [SerializeField] float hitTimer = 2f;
     [SerializeField] float hitTimerStart;
 
     //stats
@@ -204,7 +204,7 @@ public class PlayerController : MonoBehaviour
 
         if (lifting)
         {
-            if (dashInput && !powMove)
+            if (dashInput && !powMove && grounded)
                 lifting = false;
             //Front Pow Input
             else if (jumpInput && transform.right.x * dirInput.x > 0 && !powMove) 
@@ -250,6 +250,11 @@ public class PlayerController : MonoBehaviour
                 downAttack = true;
                 powMove = true;
             }
+        }
+        else
+        {
+            curVel = new Vector3(curVel.x, curVel.y + Physics.gravity.y * gravityMult * Time.deltaTime);
+
         }
 
         if(vulnerable && hitbox.GetComponent<TakeDamage>().hit)
@@ -385,13 +390,20 @@ public class PlayerController : MonoBehaviour
             grabbedObject.transform.parent = grabTrigger.transform;
             grabbedObject.transform.position = grabTrigger.transform.position;
             grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
-            curFallSpeed = liftingFallSpeed;
+
+            rb.velocity += Physics.gravity;
+
+            //curFallSpeed = liftingFallSpeed;
             curVel.x = 0;
         }
         else if (!lifting && !powMove)
         {
-            grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
-            grabbedObject = null;
+            if(grabTrigger.GetComponent<GrabCheck>().objectInRange != null)
+            {
+                grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+                grabbedObject = null;
+            }
+
         }
 
         
@@ -415,12 +427,11 @@ public class PlayerController : MonoBehaviour
 
         if(timer <= 0)
         {
-            frontAttack = canDash = backAttack = upAttack = downAttack = powMove = false;
+            
+
             if (grounded || grabbedObject.GetComponentInChildren<FeetCheck>().grounded)
             {
-
-
-                
+                frontAttack = canDash = backAttack = upAttack = downAttack = powMove = false;
                 timer = timerStart;
                 applyDamage();
             }
@@ -432,8 +443,8 @@ public class PlayerController : MonoBehaviour
         if(grabbedObject.GetComponent<EnemyHealth>())
         {
             grabbedObject.GetComponent<EnemyHealth>().Hit(1);
-            grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
-            grabbedObject = null;
+            //grabTrigger.GetComponent<GrabCheck>().objectInRange.transform.parent = null;
+            //grabbedObject = null;
 
         }
 

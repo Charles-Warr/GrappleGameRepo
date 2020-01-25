@@ -72,7 +72,6 @@ GameObject:
   - component: {fileID: -1799783586520263581}
   - component: {fileID: 4041027362887836810}
   - component: {fileID: 7724917331095321745}
-  - component: {fileID: 115361437867045631}
   m_Layer: 0
   m_Name: Item_CrateMetal
   m_TagString: Untagged
@@ -184,19 +183,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objBottom: {fileID: 2875114575439992970}
   objGrounded: 0
---- !u!114 &115361437867045631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6110774222876945769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35622a21e74c3094f866642d450fde51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 0
-  curHealth: 0
-  vulnerable: 1
-  alive: 1

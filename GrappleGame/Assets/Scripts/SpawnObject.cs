@@ -19,8 +19,8 @@ public class SpawnObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled)
-        {
+        if(!GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled && GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().curHealth == 0)
+        { 
             timer -= Time.deltaTime;
 
             

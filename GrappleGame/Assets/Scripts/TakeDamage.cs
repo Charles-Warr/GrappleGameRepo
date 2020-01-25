@@ -6,11 +6,15 @@ public class TakeDamage : MonoBehaviour
 {
     public bool hit;
     public int damage;
+
+    private float hitTimer;
+    private float hitTimerStart = 2f;
     // Start is called before the first frame update
     void Start()
     {
         damage = 0;
         hit = false;
+        hitTimer = 0f;
     }
     /*
     private void OnCollisionEnter(Collision collision)
@@ -24,8 +28,14 @@ public class TakeDamage : MonoBehaviour
     */
     public void applyDamage(int amount)
     {
-        damage = amount;
-        hit = true;
+        
+        if (hitTimer <= 0f)
+        {
+            hitTimer = hitTimerStart;
+            damage = amount;
+            hit = true;
+
+        }
     }
 
     public void setHit(bool flag)
@@ -35,6 +45,6 @@ public class TakeDamage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        hitTimer -= Time.deltaTime;
     }
 }

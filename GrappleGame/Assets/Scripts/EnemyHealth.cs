@@ -21,26 +21,21 @@ public class EnemyHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (curHealth <= 0)
-        {
-            
-        }
+
     }
     public void Hit(int amount)     //Getting hit by something with Damager component
     {
-        if (vulnerable)
-        {
+ 
             curHealth -= amount;
-            if (curHealth <= 0 && alive)
+            if (curHealth <= 0)
             {
-                Instantiate(spawnItem, transform.position, Quaternion.identity);
+                if(spawnItem != null)
+                    Instantiate(spawnItem, transform.position, Quaternion.identity);
+                
                 Die();
             }
-        }
-        else if (amount >= 999)
-        {
-            Die();
-        }
+        
+
     }
     public void Die()
     {
@@ -49,7 +44,7 @@ public class EnemyHealth : MonoBehaviour
         gameObject.SetActive(false);
         Destroy(this.gameObject);
     }
-
+    /*
     void OnTriggerEnter(Collider other)
     {
         //Damager component overlap
@@ -58,4 +53,5 @@ public class EnemyHealth : MonoBehaviour
             Hit(other.gameObject.GetComponent<Damager>().damage);
         }
     }
+    */
 }

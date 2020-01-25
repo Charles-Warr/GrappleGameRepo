@@ -22,6 +22,7 @@ public class GrabbableObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        objGrounded = objBottom.GetComponent<FeetCheck>().grounded;
+        if(objBottom != null)
+            objGrounded = objBottom.GetComponent<FeetCheck>().grounded;
     }
 }
