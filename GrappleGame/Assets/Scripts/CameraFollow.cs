@@ -18,11 +18,20 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        StartCoroutine(findPlayer());
+    }
+
+    IEnumerator findPlayer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if(player == null)
+            player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
     {
+        if(player == null)
+            player = GameObject.FindGameObjectWithTag("Player");
         moveCamera = checkPlayerPos();
 
     }
