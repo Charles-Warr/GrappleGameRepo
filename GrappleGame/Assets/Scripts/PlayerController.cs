@@ -42,8 +42,8 @@ public class PlayerController : MonoBehaviour
     public bool upAttack;
     public bool downAttack;
     [SerializeField] bool bounce;
-    [SerializeField] GameObject grabbedObject;
-    [SerializeField] bool aiming;
+    [SerializeField] GameObject grabbedObject;  
+    [SerializeField] bool aiming;  
     [SerializeField] GameObject aimReticle;
 
     [SerializeField] float slopeVelocity = 2f;
@@ -387,10 +387,14 @@ public class PlayerController : MonoBehaviour
             canDash = false;
             grabbedObject = grabTrigger.GetComponent<GrabCheck>().objectInRange;
 
-            grabbedObject.transform.parent = grabTrigger.transform;
-            grabbedObject.transform.position = grabTrigger.transform.position;
-            grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
+            if (grabbedObject != null)
+            {
+               
+                grabbedObject.transform.parent = grabTrigger.transform;
+                grabbedObject.transform.position = grabTrigger.transform.position;
+                //grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
 
+            }
             rb.velocity += Physics.gravity;
 
             //curFallSpeed = liftingFallSpeed;
