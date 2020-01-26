@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject lastCheckpoint;
     [SerializeField] bool grounded;
     [SerializeField] bool groundable;
-    [SerializeField] bool canDash;
+    [SerializeField] bool canDash = true;
     [SerializeField] bool dashing;
     [SerializeField] bool lifting;
     [SerializeField] bool canPow;
@@ -71,6 +71,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashSpeedMult = 1.61f;
     [SerializeField] float dashTime = .5f;
     [SerializeField] float curDashTime;
+    [SerializeField] float dashDelay = .4f;
+    [SerializeField] float curDashDelay;
     [SerializeField] float ungroundedTime;
     [SerializeField] float curUngroundedTime;
     
@@ -85,6 +87,7 @@ public class PlayerController : MonoBehaviour
         bounce = false;
         curHealth = maxHealth;
         curDashTime = dashTime;
+        curDashDelay = dashDelay;
         timerStart = timer;
         hitTimerStart = hitTimer;
         currentGrabs = 0f;
@@ -165,7 +168,6 @@ public class PlayerController : MonoBehaviour
                     hitstun = 0;
                 }
             }
-
             
         }
 
@@ -174,26 +176,27 @@ public class PlayerController : MonoBehaviour
         //dash timer rules
         {
             if (canDash && dashInput)
-                dashing = true;
-            
-            if (!dashing)
             {
-                if (curDashTime < dashTime)
-                {
-                    curDashTime += Time.deltaTime;
-                    canDash = false;
-                }
-                else if (curDashTime >= dashTime)
-                {
-                    curDashTime = dashTime;
-                    canDash = true;
-                }
+                dashing = true;
+                curDashDelay = dashDelay;
+            }
+            if (curDashTime >= dashTime)
+            {
+                canDash = true;
             }
             if (curDashTime <= 0)
             {
                 curDashTime = 0;
+                curDashDelay -= Time.deltaTime;
                 dashing = false;
             }
+            
+            if (curDashDelay <= 0)
+            {
+                curDashDelay = 0;
+                curDashTime = dashTime;
+            }
+
         }
 
         // CHUCK ADDED THIS
@@ -372,7 +375,8 @@ public class PlayerController : MonoBehaviour
         {
             canDash = false;
             curDashTime -= Time.deltaTime;
-            curVel = transform.right * dashSpeed * curDashTime * dashSpeedMult;
+
+            curVel = transform.right * dashSpeed * curDashTime * dashSpeedMult + transform.up;
 
             if (grabTrigger.GetComponent<GrabCheck>().grabbable)
             {
@@ -391,10 +395,12 @@ public class PlayerController : MonoBehaviour
             grabbedObject.transform.position = grabTrigger.transform.position;
             grabbedObject.GetComponent<Rigidbody>().velocity = curVel;
 
-            rb.velocity += Physics.gravity;
-
+            if(!grounded)
+                rb.velocity += Physics.gravity;
+            
             //curFallSpeed = liftingFallSpeed;
             curVel.x = 0;
+
         }
         else if (!lifting && !powMove)
         {
