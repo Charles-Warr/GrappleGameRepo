@@ -4,45 +4,68 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private GameObject player;
+    [SerializeField] GameObject player;
 
-    [SerializeField] Vector3 camVec;
-    [SerializeField] float zDist;
-    [SerializeField] Vector3 offset;
-    [SerializeField] float delay;
+    [SerializeField] Vector3 offset = new Vector3(0f, 1f, -25f);
+    [SerializeField] float smoothSpeed = 0.875f;
+    [SerializeField] float speedSmoothSpeed = 3f;
+    [SerializeField] float xMin = 0.4f;
+    [SerializeField] float xMax = 0.6f;
+    [SerializeField] float yMin = 0.4f;
+    [SerializeField] float yMax = 0.7f;
 
-    // Start is called before the first frame update
+    private bool moveCamera;
+
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        StartCoroutine(findPlayer());
     }
 
-    // Update is called once per frame
+    IEnumerator findPlayer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if(player == null)
+            player = GameObject.FindGameObjectWithTag("Player");
+    }
+
     void Update()
     {
+        if(player == null)
+            player = GameObject.FindGameObjectWithTag("Player");
+        moveCamera = checkPlayerPos();
+
+    }
+
+    void FixedUpdate()
+    {
+        Vector3 desiredPosition;
+       
+        desiredPosition = player.transform.position + offset;
+
+        
+        Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed*Time.deltaTime);
+
+        Vector3 speedPosition = Vector3.Lerp(transform.position, desiredPosition, speedSmoothSpeed * Time.deltaTime);
+
+        if(moveCamera)
+        {
+            transform.position = speedPosition;
+        }
+        else
+            transform.position = smoothPosition;
         
     }
 
-    private IEnumerator followPlayer(Vector3 location)
+    bool checkPlayerPos()
     {
-        yield return new WaitForSeconds(delay); 
 
-        this.transform.position = new Vector3(location.x + offset.x, location.y + offset.y, zDist);
+        Vector3 playerPos = Camera.main.WorldToViewportPoint(player.transform.position);
 
-    }
-
-    void LateUpdate()
-    {
-        /*
-         transform.position = camVec;
-         camVec.x = player.transform.position.x + offset.x;
-         camVec.y = player.transform.position.y + offset.y;
-         camVec.z = zDist;
-         */
+        if (playerPos.x > xMax || playerPos.x < xMin || playerPos.y > yMax || playerPos.y < yMin)
+            return true;
+        else
+            return false;
         
-        if(player.GetComponent<PlayerController>().cameraTrigger)
-            StartCoroutine(followPlayer(player.transform.position));
-
-        //this.transform.position = new Vector3(player.transform.position.x + offset.x, player.transform.position.y + offset.y, zDist );
     }
+
 }
