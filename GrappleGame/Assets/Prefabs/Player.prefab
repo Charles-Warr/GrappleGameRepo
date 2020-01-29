@@ -122,7 +122,7 @@ MonoBehaviour:
   dashSpeedMult: 2
   dashTime: 0.5
   curDashTime: 0
-  dashDelay: 0.3
+  dashDelay: 0.2
   curDashDelay: 0
   ungroundedTime: 0
   curUngroundedTime: 0
