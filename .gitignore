@@ -4212,3 +4212,69 @@ GrappleGame/Library/APIUpdater/project-dependencies.graph
 GrappleGame/GrappleGame.sln
 GrappleGame/Library/assetDatabase3
 GrappleGame/Library/metadata/63/631e87c7bd7583440a9044de7331dce1.info
+GrappleGame/Assets/Art/3D Assets/Checkpoint_Bell.fbx.meta
+GrappleGame/Assets/Art/3D Assets/Checkpoint_Bell.obj.meta
+GrappleGame/Assets/Art/3D Assets/lambert1_Base_Color.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert1_Height.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert1_Metallic.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert1_Mixed_AO.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert1_Normal.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert1_Normal_OpenGL.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert1_Roughness.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert2_Base_Color.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert2_Height.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert2_Metallic.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert2_Normal.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert2_Normal_OpenGL.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert2_Roughness.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert3_Base_Color.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert3_Height.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert3_Metallic.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert3_Normal.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert3_Normal_OpenGL.png.meta
+GrappleGame/Assets/Art/3D Assets/lambert3_Roughness.png.meta
+GrappleGame/Assets/Art/3D Assets/Material Palette.asset
+GrappleGame/Assets/Art/3D Assets/Material Palette.asset.meta
+GrappleGame/Assets/Art/3D Assets/Spikey Textures.meta
+GrappleGame/Assets/Art/3D Assets/Spikey Textures/lambert1_Normal.png.meta
+GrappleGame/Assets/Art/3D Assets/Spikey Textures/lambert1_Normal_OpenGL.png.meta
+GrappleGame/Assets/Art/3D Assets/Spikey Textures/lambert1_Roughness.png.meta
+GrappleGame/Assets/Art/3D Assets/Spikey Textures/lambert2_Base_Color.png.meta
+GrappleGame/Assets/Art/3D Assets/Spikey Textures/lambert2_Height.png.meta
+GrappleGame/Assets/Art/3D Assets/Spikey Textures/lambert2_Metallic.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Base_Color 1.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Base_Color.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Height 1.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Height.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Metallic 1.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Metallic.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Normal 1.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Normal.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Normal_OpenGL 1.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Normal_OpenGL.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Roughness 1.png.meta
+GrappleGame/Assets/Art/3D Assets/top1_Roughness.png.meta
+GrappleGame/Assets/Art/Animations/Luchadora_idle.fbx.meta
+GrappleGame/Assets/Art/Animations/Luchadore_aim2.fbx.meta
+GrappleGame/Assets/Art/Animations/Player_Luchadora_Block_TPose_UV_Rigged3.fbx.meta
+GrappleGame/Assets/Prefabs/Spikey_robo.prefab.meta
+GrappleGame/Assets/Scenes/Level_Test2.unity
+GrappleGame/Assets/Scenes/SampleScene.unity
+GrappleGame/Assets/Scripts/PlayerController.cs.meta
+GrappleGame/Library/APIUpdater/project-dependencies.graph
+GrappleGame/Library/assetDatabase3
+GrappleGame/Library/metadata/4b/4ba2329b63d54f0187bcaa12486b1b0f
+GrappleGame/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll
+GrappleGame/Library/ScriptAssemblies/Unity.Rider.Editor.dll
+GrappleGame/Library/ScriptAssemblies/Unity.TextMeshPro.dll
+GrappleGame/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll
+GrappleGame/Library/ScriptAssemblies/Unity.Timeline.dll
+GrappleGame/Library/ScriptAssemblies/Unity.Timeline.Editor.dll
+GrappleGame/Library/ScriptAssemblies/Unity.VSCode.Editor.dll
+GrappleGame/Library/ScriptAssemblies/UnityEditor.TestRunner.dll
+GrappleGame/Library/ScriptAssemblies/UnityEditor.UI.dll
+GrappleGame/Library/ScriptAssemblies/UnityEngine.TestRunner.dll
+GrappleGame/Library/ScriptAssemblies/UnityEngine.UI.dll
+GrappleGame/Library/ShaderCache/EditorEncounteredVariants
+GrappleGame/ProjectSettings/ProBuilderSettings.json
+GrappleGame/Temp/UnityTempFile-5b7ae5c0471053c48a42a8a6c581fd02
