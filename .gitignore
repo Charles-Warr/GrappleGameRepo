@@ -4342,3 +4342,21 @@ GrappleGame/Assets/Art/Materials/M_Enemy_Face.mat.meta
 GrappleGame/Assets/Art/Materials/M_Enemy_Bolts.mat.meta
 GrappleGame/Assets/Art/Materials/M_Enemy_Body.mat.meta
 GrappleGame/Assets/Art/Animations/Enemy_Walker_Anim.fbx.meta
+GrappleGame/Assets/Art/3D Assets/Enemy_Jumper.fbx.meta
+GrappleGame/Assets/Art/Materials/M_Enemy_Jumper_Boosters.mat.meta
+GrappleGame/Assets/Art/Materials/M_Enemy_Jumper_Joints.mat.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Boosters_Base_Color.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Boosters_Height.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Boosters_Metallic.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Boosters_Mixed_AO.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Boosters_Normal.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Boosters_Normal_OpenGL.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Boosters_Roughness.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Jumper_Joints_Base_Color.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Jumper_Joints_Height.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Jumper_Joints_Metallic.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Jumper_Joints_Mixed_AO.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Jumper_Joints_Normal.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Jumper_Joints_Normal_OpenGL.tga.meta
+GrappleGame/Assets/Art/Materials/T_Enemy_Jumper_Joints_Roughness.tga.meta
+GrappleGame/Assets/Prefabs/Enemy_Jumper.prefab.meta
