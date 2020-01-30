@@ -175,7 +175,7 @@ public class JumpingEnemyController : MonoBehaviour
             airTime = 0;
         }
 
-        Debug.Log(airTime);
+        //Debug.Log(airTime);
 
         timeToJump = timer >= timeBetweenJumps;
 
