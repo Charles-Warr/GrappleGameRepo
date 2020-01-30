@@ -39,20 +39,22 @@ public class CameraFollow : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 desiredPosition;
-       
-        desiredPosition = player.transform.position + offset;
-
-        
-        Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed*Time.deltaTime);
-
-        Vector3 speedPosition = Vector3.Lerp(transform.position, desiredPosition, speedSmoothSpeed * Time.deltaTime);
-
-        if(moveCamera)
+        if (player != null)
         {
-            transform.position = speedPosition;
+            desiredPosition = player.transform.position + offset;
+
+
+            Vector3 smoothPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+
+            Vector3 speedPosition = Vector3.Lerp(transform.position, desiredPosition, speedSmoothSpeed * Time.deltaTime);
+
+            if (moveCamera)
+            {
+                transform.position = speedPosition;
+            }
+            else
+                transform.position = smoothPosition;
         }
-        else
-            transform.position = smoothPosition;
         
     }
 

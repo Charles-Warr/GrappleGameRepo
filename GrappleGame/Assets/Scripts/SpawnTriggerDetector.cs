@@ -18,10 +18,17 @@ public class SpawnTriggerDetector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(SpawnedIn)
-            objectToSpawn.SetActive(true);
-        else
-            objectToSpawn.SetActive(false);
+        if (objectToSpawn != null)
+        {
+
+
+
+            if (SpawnedIn)
+                objectToSpawn.SetActive(true);
+            else
+                objectToSpawn.SetActive(false);
+
+        }
     }
 
     void OnTriggerEnter(Collider other)

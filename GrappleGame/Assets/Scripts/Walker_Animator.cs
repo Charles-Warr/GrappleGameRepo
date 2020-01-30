@@ -7,6 +7,8 @@ public class Walker_Animator : MonoBehaviour
     private Animator anim;
     private Rigidbody body;
 
+    public bool finishTurning;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,9 +17,12 @@ public class Walker_Animator : MonoBehaviour
 
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
         anim.SetFloat("Speed", Mathf.Abs(body.velocity.normalized.x));
+
     }
 }

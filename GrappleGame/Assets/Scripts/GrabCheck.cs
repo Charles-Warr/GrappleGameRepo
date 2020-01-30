@@ -21,7 +21,7 @@ public class GrabCheck : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<GrabbableObject>())
+        if (other.gameObject.GetComponent<GrabbableObject>() && objectInRange == null)
         {
             objectInRange = other.gameObject;
             grabbable = true;

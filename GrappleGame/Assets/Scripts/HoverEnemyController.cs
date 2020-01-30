@@ -28,7 +28,8 @@ public class HoverEnemyController : MonoBehaviour
     {
         currentPosition = this.GetComponent<Transform>();
         enemybody = this.GetComponent<Rigidbody>();
-        currentPosition.SetPositionAndRotation(StartingPoint.position, currentPosition.rotation);
+        if(StartingPoint!=null)
+            currentPosition.SetPositionAndRotation(StartingPoint.position, currentPosition.rotation);
         firstRotation = currentPosition.rotation.eulerAngles.y;
         canMove = true;
 

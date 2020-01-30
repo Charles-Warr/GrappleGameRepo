@@ -15,7 +15,8 @@ public class OutofBounds : MonoBehaviour
     {
         if(other.gameObject.GetComponent<TakeDamage>())
         {
-            other.gameObject.GetComponentInParent<PlayerController>().curHealth = 0;
+            other.gameObject.GetComponentInParent<UserController>().settings.currentHealth = 0;
+            other.gameObject.GetComponent<UserController>().die();
         }
 
         if(other.gameObject.GetComponent<EnemyHealth>() || other.gameObject.GetComponent<GrabbableObject>())
