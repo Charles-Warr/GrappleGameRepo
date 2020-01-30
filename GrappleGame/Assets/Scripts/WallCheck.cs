@@ -20,7 +20,7 @@ public class WallCheck : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<Wall>())
+        if (other.gameObject.GetComponent<Wall>() || other.gameObject.GetComponent<GrabbableObject>())
         {
             grounded = true;
         }
@@ -29,7 +29,7 @@ public class WallCheck : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.GetComponent<Wall>())
+        if (other.gameObject.GetComponent<Wall>() || other.gameObject.GetComponent<GrabbableObject>())
         {
             grounded = false;
         }
