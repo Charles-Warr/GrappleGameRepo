@@ -41,6 +41,13 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
     }
 
+    public void Restart()
+    {
+        int sceneNum = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.UnloadSceneAsync(sceneNum);
+        SceneManager.LoadScene(sceneNum);
+    }
+
     public void Options()
     {
         pause.SetActive(false);
