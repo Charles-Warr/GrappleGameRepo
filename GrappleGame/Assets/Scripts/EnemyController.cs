@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
 {
     private Rigidbody enemybody;
     [SerializeField] CapsuleCollider wallDetector;
+    [SerializeField] CapsuleCollider ledgeDetector;
     [SerializeField] Transform StartingPoint;
 
     [SerializeField] float motionSpeed;
@@ -22,6 +23,8 @@ public class EnemyController : MonoBehaviour
     private bool rotated;
     
     private bool wallDetected;
+    private bool ledgeDetected;
+    private float rotationDir;
     
 
 
@@ -38,13 +41,14 @@ public class EnemyController : MonoBehaviour
 
 
 
-    private void turnAround(bool flag, bool status)
+    private void turnAround(bool flag, bool flag2, bool status)
     {
-        if(flag || status)
+        if(flag || status || flag2)
         {
             if(!rotating)
             {
                 firstRotation = currentRotation;
+                rotationDir = -enemybody.transform.right.z;
             }
 
             rotate();
@@ -58,7 +62,7 @@ public class EnemyController : MonoBehaviour
 
         rotating = true;
 
-        enemybody.transform.Rotate(0, Time.deltaTime * rotationSpeed, 0, Space.Self);
+        enemybody.transform.Rotate(0, Time.deltaTime * rotationSpeed * rotationDir, 0, Space.Self);
 
     }
 
@@ -67,7 +71,7 @@ public class EnemyController : MonoBehaviour
     {
         if(flag && !rotating)
         {
-            enemybody.velocity = new Vector3(motionSpeed* enemybody.transform.forward.z, enemybody.velocity.y, 0);
+            enemybody.velocity = new Vector3(motionSpeed * -enemybody.transform.right.z, enemybody.velocity.y,0);
         }
         else
         {
@@ -77,9 +81,11 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        
       
         wallDetected = wallDetector.GetComponent<WallCheck>().grounded;
-        canMove = !wallDetected;
+        ledgeDetected = ledgeDetector.GetComponent<LedgeCheck>().grounded;
+        canMove = !(wallDetected || ledgeDetected);
 
         currentRotation = currentPosition.rotation.eulerAngles.y;
 
@@ -89,7 +95,7 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        turnAround(wallDetected, rotating);
+        turnAround(wallDetected, ledgeDetected, rotating);
         MoveToPosition(canMove, rotating);
 
         if(rotated)
