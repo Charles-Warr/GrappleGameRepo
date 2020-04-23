@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class CameraFollow : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class CameraFollow : MonoBehaviour
 
     private bool moveCamera;
 
+    private Touch[] mobileTouchInput = new Touch[3];
+    private int touchCount = 0;
+
     void Start()
     {
         StartCoroutine(findPlayer());
@@ -30,6 +34,14 @@ public class CameraFollow : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetTouch(touchCount).tapCount != 0 )
+        {
+            mobileTouchInput[touchCount] = Input.GetTouch(touchCount);
+
+            print(mobileTouchInput[touchCount].phase);
+
+        }
+
         if(player == null)
             player = GameObject.FindGameObjectWithTag("Player");
         moveCamera = checkPlayerPos();

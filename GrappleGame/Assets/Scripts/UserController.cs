@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Android;
 using UnityEngine;
 using TMPro;
 
@@ -42,7 +43,6 @@ public class UserController : MonoBehaviour
     }
 
 
-
     private bool acceptInput;
     private bool grounded;
     private bool dashing;
@@ -55,6 +55,7 @@ public class UserController : MonoBehaviour
     private float dirInf;
     private float slopeVel;
 
+
     private Vector2 dashStart;
     private Vector2 jumpStart;
     private Vector2 chosenMove;
@@ -66,6 +67,8 @@ public class UserController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+      
+
         player = this.GetComponent<Rigidbody>();
         comp.HealthUI = GameObject.FindGameObjectWithTag("Health");
         acceptInput = true;
@@ -83,6 +86,9 @@ public class UserController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
+
         dirInf = Input.GetAxis("Horizontal");
         grounded = comp.feet.GetComponent<FeetCheck>().grounded;
 
@@ -93,7 +99,8 @@ public class UserController : MonoBehaviour
         }
 
         {
-            comp.HealthUI.GetComponent<TextMeshProUGUI>().text = "Health:" + settings.currentHealth;
+            if(comp.HealthUI!=null)
+                comp.HealthUI.GetComponent<TextMeshProUGUI>().text = "Health:" + settings.currentHealth;
 
             if (settings.currentHealth <= 0)
             {
@@ -247,8 +254,25 @@ public class UserController : MonoBehaviour
         hold();
         dash();
         move();
+        applyGravity();
+        /*
         if (!grounded)
             player.velocity += Physics.gravity * Time.deltaTime;
+            */
+    }
+
+    private void applyGravity()
+    {
+
+
+        if(!grounded)
+        {
+            player.velocity += Physics.gravity * Time.deltaTime;
+        }
+        else
+        {
+            player.velocity += Physics.gravity * Time.deltaTime;
+        }
     }
 
     private void jump()
@@ -291,7 +315,7 @@ public class UserController : MonoBehaviour
         if(bouncing)
         {
             if (Mathf.Abs(player.position.x - jumpStart.x) < 1f && Mathf.Abs(player.position.y - jumpStart.y) < 1f)
-                player.AddForce(new Vector3(-player.transform.right.x * settings.bounceForce / 4, settings.bounceForce/2), ForceMode.Impulse);
+                player.AddForce(new Vector3(-player.transform.right.x * settings.bounceForce / 4, settings.bounceForce/2), ForceMode.Force);
             else
                 bouncing = false;
         }
@@ -400,11 +424,25 @@ public class UserController : MonoBehaviour
             {
                 transform.rotation = Quaternion.LookRotation(-1*player.transform.forward, Vector3.up);
             }
+
+            RaycastHit slopes;
+
+
+
+            if (Physics.SphereCast(new Vector3(player.position.x + (.5f * player.transform.right.x), player.position.y - .9f, player.position.z), .2f, gameObject.transform.right, out slopes, .3f))
+            {
+                if (slopes.collider.GetComponent<Ground>())
+                {
+                    Debug.Log("on slope");
+                }
+            }
         }
 
-        Debug.DrawRay(new Vector3(player.position.x + (.5f * player.transform.right.x), player.position.y - .5f, player.position.z), gameObject.transform.right, Color.red);
+        Debug.DrawRay(new Vector3(player.position.x, player.position.y - .9f, player.position.z), gameObject.transform.right, Color.red);
 
-        RaycastHit slopes;
+        
+        /*
+
 
         if (Physics.Raycast(new Vector3(player.position.x + (.5f * player.transform.right.x), player.position.y - .5f, player.position.z), gameObject.transform.right, out slopes, 1f))
         {
@@ -421,7 +459,7 @@ public class UserController : MonoBehaviour
         }
 
         
-
+        */
 
         if (acceptInput)
         {
@@ -429,7 +467,7 @@ public class UserController : MonoBehaviour
             {
                 if(!(Mathf.Abs(player.velocity.x) >= settings.maxVelocity))
                 {
-                    player.AddForce(Input.GetAxis("Horizontal") * Vector2.right * settings.acceleration + (Vector2.up*slopeVel), ForceMode.Acceleration);
+                    player.AddForce(Input.GetAxis("Horizontal") * Vector3.right * settings.acceleration/* + (Vector3.up*slopeVel)*/, ForceMode.Force);
                 }
                 else
                 {
