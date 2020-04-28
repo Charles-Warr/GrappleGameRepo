@@ -87,8 +87,6 @@ public class UserController : MonoBehaviour
     void Update()
     {
 
-
-
         dirInf = Input.GetAxis("Horizontal");
         grounded = comp.feet.GetComponent<FeetCheck>().grounded;
 
